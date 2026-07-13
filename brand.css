@@ -1,0 +1,165 @@
+/* ==========================================================================
+   Beyond925 Brand System
+   ========================================================================== */
+
+/* Fonts: Satoshi (body) + Chillax (display) */
+@import url("https://api.fontshare.com/v2/css?f[]=chillax@500,600&f[]=satoshi@400,500,700&display=swap");
+
+/* ==========================================================================
+   Design Tokens
+   ========================================================================== */
+:root {
+  /* Primitives */
+  --b925-primitive-cream: #f6f5ef;
+  --b925-primitive-slate-50: #f8fafc;
+  --b925-primitive-navy: #2a508d;
+  --b925-primitive-navy-tint: #4a6ea3;
+  --b925-primitive-cyan: #2299c4;
+  --b925-primitive-cyan-mid: #28abd9;
+  --b925-primitive-blue: #1e53af;
+  --b925-primitive-blue-deep: #163a7a;
+  --b925-primitive-teal: #35d6de;
+  --b925-primitive-teal-bright: #3ee4e2;
+  --b925-primitive-teal-deep: #1ea7af;
+  --b925-primitive-ink: #0e1a33;
+  --b925-primitive-ink-strong: #061026;
+  --b925-primitive-ink-muted: #4a5878;
+  --b925-primitive-ink-subtle: #6b7691;
+  --b925-primitive-destructive: #dc2626;
+  --b925-primitive-white: #ffffff;
+
+  /* Semantic Colors */
+  --b925-background: var(--b925-primitive-cream);
+  --b925-primary: var(--b925-primitive-navy);
+  --b925-primary-tint: var(--b925-primitive-navy-tint);
+  --b925-interactive: var(--b925-primitive-cyan);
+  --b925-secondary: var(--b925-primitive-teal);
+  --b925-secondary-deep: var(--b925-primitive-teal-deep);
+  --b925-accent: var(--b925-primitive-cyan);
+
+  --b925-ink: var(--b925-primitive-ink);
+  --b925-ink-strong: var(--b925-primitive-ink-strong);
+  --b925-ink-muted: var(--b925-primitive-ink-muted);
+  --b925-ink-subtle: var(--b925-primitive-ink-subtle);
+
+  --b925-surface: #ffffffc7;
+  --b925-surface-strong: #ffffffeb;
+  --b925-surface-soft: #ffffff8c;
+  --b925-surface-quiet: #ffffff52;
+
+  --b925-tint-primary: #2a508d0f;
+  --b925-tint-secondary: #35d6de14;
+
+  --b925-border: #ffffffb3;
+  --b925-border-strong: #14234b14;
+  --b925-border-quiet: #14234b0d;
+
+  /* Shadows */
+  --b925-shadow: 0 1px 2px #14234b0a, 0 14px 36px -18px #14234b2e;
+  --b925-shadow-elevated: 0 1px 3px #14234b0d, 0 28px 56px -22px #14234b3d;
+  --b925-shadow-soft: 0 8px 24px -12px #14234b29;
+  --b925-shadow-button: 0 1px 0 #ffffff2e inset, 0 0 0 1px #ffffff0a inset, 0 8px 22px -10px #2a508d73;
+  --b925-focus-ring: 0 0 0 3px #2a508d2e;
+
+  /* Blur */
+  --b925-blur-sm: blur(8px) saturate(140%);
+  --b925-blur-md: blur(16px) saturate(150%);
+  --b925-blur-lg: blur(28px) saturate(160%);
+
+  /* Timing */
+  --b925-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --b925-duration-fast: 0.15s;
+  --b925-duration-ui: 0.22s;
+  --b925-duration-panel: 0.28s;
+
+  /* Typography */
+  --b925-font-sans: Satoshi, system-ui, sans-serif;
+  --b925-font-display: Chillax, Satoshi, system-ui, sans-serif;
+  --b925-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Radii */
+  --b925-radius-ui: 0.625rem;
+  --b925-radius-input: 14px;
+  --b925-radius-card-lg: 2rem;
+  --b925-radius-pill: 9999px;
+}
+
+/* ==========================================================================
+   Background Shell (Fixed Blobs)
+   ========================================================================== */
+.b925-shell {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  background: var(--b925-background);
+}
+
+.b925-shell::before {
+  content: "";
+  position: absolute;
+  top: -8rem;
+  left: -8rem;
+  width: 36rem;
+  height: 36rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--b925-secondary) 35%, transparent), transparent 70%);
+  opacity: 0.45;
+}
+
+.b925-shell::after {
+  content: "";
+  position: absolute;
+  bottom: -6rem;
+  right: -6rem;
+  width: 28rem;
+  height: 28rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--b925-interactive) 30%, transparent), transparent 70%);
+  opacity: 0.35;
+}
+
+
+
+/* ==========================================================================
+   Reveal Animations
+   ========================================================================== */
+@keyframes b925-rise {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.b925-reveal {
+  opacity: 0;
+  transition:
+    opacity var(--b925-duration-panel) var(--b925-ease-out),
+    transform var(--b925-duration-panel) var(--b925-ease-out);
+  transform: translateY(14px);
+}
+
+.b925-reveal.is-visible,
+.b925-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.b925-reveal-delay-1 { transition-delay: 0.1s; }
+.b925-reveal-delay-2 { transition-delay: 0.2s; }
+.b925-reveal-delay-3 { transition-delay: 0.3s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  html { scroll-behavior: auto; }
+  .b925-reveal { opacity: 1; transition: none; transform: none; }
+}
+
+
