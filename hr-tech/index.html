@@ -292,7 +292,6 @@
 
   <script>
     (function () {
-      var PASSWORD_HASH = "624b1d4b82fa5e996a8708fb14d2e908ada003886457cc8e788505ab97579efd";
       var MAX_ATTEMPTS = 5;
       var LOCKOUT_SECONDS = 30;
       var attempts = parseInt(sessionStorage.getItem("pw_attempts") || "0", 10);
@@ -300,16 +299,6 @@
 
       if (attempts >= MAX_ATTEMPTS && Date.now() < lockoutUntil) {
         showLockout();
-      }
-
-      async function sha256(plain) {
-        var enc = new TextEncoder();
-        var data = enc.encode(plain);
-        var buf = await crypto.subtle.digest("SHA-256", data);
-        var arr = Array.from(new Uint8Array(buf));
-        return arr.map(function (b) {
-          return b.toString(16).padStart(2, "0");
-        }).join("");
       }
 
       function showLockout() {
@@ -350,27 +339,35 @@
           return;
         }
 
-        var hash = await sha256(entered);
+        try {
+          var resp = await fetch("/api/verify-password", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ company: "hr-tech", password: entered }),
+          });
 
-        if (hash !== PASSWORD_HASH) {
-          attempts = attempts + 1;
-          sessionStorage.setItem("pw_attempts", String(attempts));
-
-          if (attempts >= MAX_ATTEMPTS) {
-            lockoutUntil = Date.now() + LOCKOUT_SECONDS * 1000;
-            sessionStorage.setItem("pw_lockout", String(lockoutUntil));
-            showLockout();
-          } else {
-            document.getElementById("error").classList.add("visible");
-            input.value = "";
-            input.focus();
+          if (resp.ok) {
+            sessionStorage.removeItem("pw_attempts");
+            sessionStorage.removeItem("pw_lockout");
+            window.location.href = "./bewerbung.html";
+            return;
           }
-          return;
+        } catch (_) {
+          // network error — fall through to error count
         }
 
-        sessionStorage.removeItem("pw_attempts");
-        sessionStorage.removeItem("pw_lockout");
-        window.location.href = "./bewerbung.html";
+        attempts = attempts + 1;
+        sessionStorage.setItem("pw_attempts", String(attempts));
+
+        if (attempts >= MAX_ATTEMPTS) {
+          lockoutUntil = Date.now() + LOCKOUT_SECONDS * 1000;
+          sessionStorage.setItem("pw_lockout", String(lockoutUntil));
+          showLockout();
+        } else {
+          document.getElementById("error").classList.add("visible");
+          input.value = "";
+          input.focus();
+        }
       };
     })();
   </script>

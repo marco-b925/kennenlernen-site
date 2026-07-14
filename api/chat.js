@@ -4,6 +4,7 @@
 
 import fs from "fs";
 import path from "path";
+import { isRateLimited } from "./rate-limit.js";
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 const MODEL = "minimax/minimax-m3";
@@ -84,6 +85,11 @@ function buildSystemPrompt() {
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method Not Allowed" });
+  }
+
+  const ip = req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || "unknown";
+  if (isRateLimited(ip)) {
+    return res.status(429).json({ error: "Too many requests" });
   }
 
   const apiKey = process.env.OPENROUTER_API_KEY;
