@@ -164,6 +164,49 @@
     .nav-bar button.active { background:var(--b925-teal); color:#fff; font-weight:600; }
     .nav-bar button.active .nav-num { color:rgba(255,255,255,0.8); }
 
+    .nav-back {
+      font-size: 16px; color: rgba(255,255,255,0.4);
+      text-decoration: none; padding: 6px 12px;
+      border-radius: 999px; transition: all 0.15s;
+      display: flex; align-items: center;
+      margin-right: auto;
+    }
+    .nav-back:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.08); }
+    .nav-back:focus-visible {
+      outline: 2px solid var(--b925-teal);
+      outline-offset: 2px;
+    }
+
+    .nav-bar button:focus-visible {
+      outline: 2px solid var(--b925-teal);
+      outline-offset: 2px;
+    }
+
+    .deck-counter button:focus-visible {
+      outline: 2px solid rgba(255,255,255,0.6);
+      outline-offset: 2px;
+    }
+
+    .cta-btn:focus-visible {
+      outline: 3px solid var(--b925-teal);
+      outline-offset: 3px;
+    }
+
+    .proj-link:focus-visible {
+      outline: 2px solid var(--b925-navy);
+      outline-offset: 2px;
+    }
+
+    .proj-dl-btn:focus-visible {
+      outline: 2px solid var(--b925-teal);
+      outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cta-btn { transition: none; }
+      .proj-link, .proj-dl-btn, .nav-bar button { transition: none; }
+    }
+
     .card.elevated { background: var(--b925-surface); box-shadow: 0 8px 48px rgba(6,16,38,0.08), 0 2px 8px rgba(6,16,38,0.04); border-color: rgba(20,35,75,0.12); }
 
     .s-framework { padding: 60px 100px 0; }
@@ -206,6 +249,7 @@
 </head>
 <body>
 <div class="nav-bar" id="top-nav">
+  <a href="index.html" class="nav-back" aria-label="Zurück zur HR-Tech Seite">←</a>
   <button data-slide="0" class="active"><span class="nav-num">01</span> Titel</button>
   <button data-slide="1"><span class="nav-num">02</span> Anschreiben</button>
   <button data-slide="2"><span class="nav-num">03</span> Framework</button>
