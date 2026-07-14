@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>HR Tech Consulting — Marco Grotemeyer</title>
+  <style>
+    @import url("https://api.fontshare.com/v2/css?f[]=chillax@500,600&f[]=satoshi@400,500,700&display=swap");
+
+    :root {
+      --cream: #f6f5ef;
+      --navy: #2a508d;
+      --teal: #35d6de;
+      --ink: #061026;
+      --muted: #4a5878;
+      --subtle: #6b7691;
+      --surface: rgba(255, 255, 255, 0.78);
+      --border-alpha: rgba(20, 35, 75, 0.08);
+      --ease: cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Satoshi, system-ui, -apple-system, sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background: var(--cream);
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    .shell {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .shell::before {
+      content: "";
+      position: absolute;
+      top: -6rem;
+      left: -6rem;
+      width: 24rem;
+      height: 24rem;
+      border-radius: 50%;
+      background: radial-gradient(circle, color-mix(in srgb, var(--teal) 30%, transparent), transparent 70%);
+      opacity: 0.3;
+    }
+
+    .shell::after {
+      content: "";
+      position: absolute;
+      bottom: -4rem;
+      right: -4rem;
+      width: 20rem;
+      height: 20rem;
+      border-radius: 50%;
+      background: radial-gradient(circle, color-mix(in srgb, var(--navy) 20%, transparent), transparent 70%);
+      opacity: 0.2;
+    }
+
+    .page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 28rem;
+      padding: 3rem 2.5rem;
+      background: var(--surface);
+      -webkit-backdrop-filter: blur(16px) saturate(150%);
+      backdrop-filter: blur(16px) saturate(150%);
+      border: 1px solid var(--border-alpha);
+      border-radius: 2rem;
+      box-shadow: 0 2px 24px rgba(6, 16, 38, 0.06);
+      text-align: center;
+    }
+
+    .logo {
+      font-family: Chillax, Satoshi, system-ui, sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .logo::before {
+      content: "";
+      display: block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+
+    h1 {
+      font-family: Chillax, Satoshi, system-ui, sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 0.75rem;
+      line-height: 1.2;
+    }
+
+    h1 span {
+      color: var(--navy);
+    }
+
+    .sub {
+      font-size: 0.9375rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    .passcode {
+      display: flex;
+      gap: 0.5rem;
+      max-width: 100%;
+    }
+
+    .passcode-input {
+      flex: 1;
+      min-width: 0;
+      padding: 0.875rem 1.25rem;
+      font-family: Satoshi, system-ui, sans-serif;
+      font-size: 0.9375rem;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid var(--border-alpha);
+      border-radius: 9999px;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .passcode-input:focus {
+      border-color: var(--navy);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--navy) 15%, transparent);
+    }
+
+    .passcode-btn {
+      flex-shrink: 0;
+      padding: 0.875rem 1.5rem;
+      font-family: Satoshi, system-ui, sans-serif;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--navy);
+      border: none;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.15s var(--ease);
+      white-space: nowrap;
+    }
+
+    .passcode-btn:hover {
+      background: color-mix(in srgb, var(--navy) 85%, #000);
+    }
+
+    .passcode-btn:active {
+      transform: scale(0.96);
+    }
+
+    .passcode-btn:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .error {
+      display: none;
+      font-size: 0.8125rem;
+      color: #dc2626;
+      margin-top: 0.75rem;
+    }
+
+    .error.visible {
+      display: block;
+    }
+
+    .lockout {
+      display: none;
+      font-size: 0.8125rem;
+      color: var(--muted);
+      margin-top: 0.75rem;
+    }
+
+    .lockout.visible {
+      display: block;
+    }
+
+    .lockout strong {
+      color: var(--teal);
+    }
+
+    .footer-hint {
+      margin-top: 1.5rem;
+      font-size: 0.75rem;
+      color: var(--subtle);
+    }
+
+    @media (max-width: 640px) {
+      .card {
+        padding: 2rem 1.5rem;
+      }
+
+      .passcode {
+        flex-direction: column;
+      }
+
+      .passcode-btn {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .logo::before {
+        animation: none;
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell" aria-hidden="true"></div>
+
+  <main class="page">
+    <div class="card">
+      <div class="logo">Nur für HR Tech Consulting</div>
+      <h1>Marco <span>Grotemeyer</span></h1>
+      <p class="sub">
+        Persönlicher Bewerbungsbereich.<br>
+        Gib den Zugangscode aus der E-Mail ein.
+      </p>
+
+      <div class="passcode">
+        <input
+          type="password"
+          class="passcode-input"
+          id="passcodeInput"
+          placeholder="Zugangscode"
+          autocomplete="off"
+          onkeydown="if(event.key==='Enter')unlock()"
+        >
+        <button class="passcode-btn" id="passcodeBtn" onclick="unlock()">
+          Öffnen
+        </button>
+      </div>
+
+      <p class="error" id="error">Falscher Code. Bitte versuch es nochmal.</p>
+      <p class="lockout" id="lockout">Zu viele Versuche. Warte <strong id="lockoutTimer">30</strong> Sekunden.</p>
+
+      <p class="footer-hint">
+        Dr. Claudia Salomon & Team<br>
+        HR Tech Consulting GmbH, Monheim am Rhein
+      </p>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      var PASSWORD_HASH = "624b1d4b82fa5e996a8708fb14d2e908ada003886457cc8e788505ab97579efd";
+      var MAX_ATTEMPTS = 5;
+      var LOCKOUT_SECONDS = 30;
+      var attempts = parseInt(sessionStorage.getItem("pw_attempts") || "0", 10);
+      var lockoutUntil = parseInt(sessionStorage.getItem("pw_lockout") || "0", 10);
+
+      if (attempts >= MAX_ATTEMPTS && Date.now() < lockoutUntil) {
+        showLockout();
+      }
+
+      async function sha256(plain) {
+        var enc = new TextEncoder();
+        var data = enc.encode(plain);
+        var buf = await crypto.subtle.digest("SHA-256", data);
+        var arr = Array.from(new Uint8Array(buf));
+        return arr.map(function (b) {
+          return b.toString(16).padStart(2, "0");
+        }).join("");
+      }
+
+      function showLockout() {
+        var remaining = Math.ceil((lockoutUntil - Date.now()) / 1000);
+        document.getElementById("passcodeBtn").disabled = true;
+        document.getElementById("passcodeInput").disabled = true;
+        document.getElementById("error").classList.remove("visible");
+        document.getElementById("lockout").classList.add("visible");
+        document.getElementById("lockoutTimer").textContent = remaining;
+
+        var timer = setInterval(function () {
+          remaining = Math.ceil((lockoutUntil - Date.now()) / 1000);
+          if (remaining <= 0) {
+            clearInterval(timer);
+            attempts = 0;
+            sessionStorage.setItem("pw_attempts", "0");
+            sessionStorage.removeItem("pw_lockout");
+            document.getElementById("lockout").classList.remove("visible");
+            document.getElementById("passcodeBtn").disabled = false;
+            document.getElementById("passcodeInput").disabled = false;
+            document.getElementById("passcodeInput").focus();
+          } else {
+            document.getElementById("lockoutTimer").textContent = remaining;
+          }
+        }, 1000);
+      }
+
+      window.unlock = async function () {
+        if (attempts >= MAX_ATTEMPTS && Date.now() < lockoutUntil) {
+          return;
+        }
+
+        var input = document.getElementById("passcodeInput");
+        var entered = input.value;
+
+        if (!entered) {
+          document.getElementById("error").classList.add("visible");
+          return;
+        }
+
+        var hash = await sha256(entered);
+
+        if (hash !== PASSWORD_HASH) {
+          attempts = attempts + 1;
+          sessionStorage.setItem("pw_attempts", String(attempts));
+
+          if (attempts >= MAX_ATTEMPTS) {
+            lockoutUntil = Date.now() + LOCKOUT_SECONDS * 1000;
+            sessionStorage.setItem("pw_lockout", String(lockoutUntil));
+            showLockout();
+          } else {
+            document.getElementById("error").classList.add("visible");
+            input.value = "";
+            input.focus();
+          }
+          return;
+        }
+
+        sessionStorage.removeItem("pw_attempts");
+        sessionStorage.removeItem("pw_lockout");
+        window.location.href = "bewerbung.html";
+      };
+    })();
+  </script>
+</body>
+</html>

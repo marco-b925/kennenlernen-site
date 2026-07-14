@@ -1,0 +1,10 @@
+{
+  "name": "Onboarding Automation Workflow",
+  "description": "n8n workflow for automated employee onboarding — welcome email, account creation, buddy assignment.",
+  "nodes": [
+    { "type": "schedule", "name": "On Start Date", "position": [250, 300] },
+    { "type": "httpRequest", "name": "Create Accounts", "position": [450, 300] },
+    { "type": "email", "name": "Welcome Email", "position": [650, 300] },
+    { "type": "slack", "name": "Notify Buddy", "position": [850, 300] }
+  ]
+}
