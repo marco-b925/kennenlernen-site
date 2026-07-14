@@ -7,6 +7,10 @@ function getCompanyHashes() {
     if (!raw) return { missing: true };
     const parsed = JSON.parse(raw.trim());
     if (typeof parsed !== "object" || !parsed) return { invalid: true, raw: raw.substring(0, 60) };
+    // Trim all hash values (env vars can pick up stray newlines)
+    for (const key of Object.keys(parsed)) {
+      if (typeof parsed[key] === "string") parsed[key] = parsed[key].trim();
+    }
     return parsed;
   } catch (e) {
     return { error: e.message, raw: (process.env.COMPANY_PASSWORDS || "").substring(0, 60) };
@@ -38,15 +42,15 @@ export default async function handler(req, res) {
   const hashes = getCompanyHashes();
   if (hashes.error || hashes.missing || hashes.invalid) {
     console.error("COMPANY_PASSWORDS parse issue:", JSON.stringify(hashes));
-    return res.status(500).json({ error: "Server config error", debug: hashes });
+    return res.status(500).json({ error: "Server config error" });
   }
   if (!hashes[company]) {
-    return res.status(401).json({ error: "Invalid company", debug: { company, available: Object.keys(hashes) } });
+    return res.status(401).json({ error: "Invalid company" });
   }
 
   const enteredHash = sha256(password);
   if (enteredHash !== hashes[company]) {
-    return res.status(401).json({ error: "Invalid password", debug: { expectedLen: hashes[company].length, gotLen: enteredHash.length } });
+    return res.status(401).json({ error: "Invalid password" });
   }
 
   return res.status(200).json({ ok: true });
