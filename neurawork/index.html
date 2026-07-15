@@ -259,10 +259,10 @@
 
   <main class="page">
     <div class="card">
-      <div class="logo">Nur für HR Tech Consulting</div>
+      <div class="logo">Nur f&uuml;r Neurawork</div>
       <h1>Marco <span>Grotemeyer</span></h1>
       <p class="sub">
-        Persönlicher Bewerbungsbereich.<br>
+        Pers&ouml;nlicher Bewerbungsbereich.<br>
         Gib den Zugangscode aus der E-Mail ein.
       </p>
 
@@ -276,17 +276,16 @@
           onkeydown="if(event.key==='Enter')unlock()"
         >
         <button class="passcode-btn" id="passcodeBtn" onclick="unlock()">
-          Öffnen
+          &Ouml;ffnen
         </button>
       </div>
 
       <p class="error" id="error">Falscher Code. Bitte versuch es nochmal.</p>
       <p class="lockout" id="lockout">Zu viele Versuche. Warte <strong id="lockoutTimer">30</strong> Sekunden.</p>
-      <p id="success" style="display:none;font-size:0.9375rem;color:var(--navy);margin-top:0.75rem;">Zugang bestätigt. <a href="/hr-tech/bewerbung.html" style="color:var(--navy);font-weight:600;">Hier klicken</a>, falls nicht automatisch weitergeleitet.</p>
 
       <p class="footer-hint">
-        Dr. Claudia Salomon & Team<br>
-        HR Tech Consulting GmbH, Monheim am Rhein
+        Christoph Kn&ouml;ll &amp; Sylvia Kn&ouml;ll<br>
+        Neurawork GmbH &amp; Co. KG, Ampfing
       </p>
     </div>
   </main>
@@ -296,8 +295,8 @@
       var PASSWORD_HASH = "624b1d4b82fa5e996a8708fb14d2e908ada003886457cc8e788505ab97579efd";
       var MAX_ATTEMPTS = 5;
       var LOCKOUT_SECONDS = 30;
-      var attempts = parseInt(sessionStorage.getItem("pw_attempts") || "0", 10);
-      var lockoutUntil = parseInt(sessionStorage.getItem("pw_lockout") || "0", 10);
+      var attempts = parseInt(sessionStorage.getItem("nw_attempts") || "0", 10);
+      var lockoutUntil = parseInt(sessionStorage.getItem("nw_lockout") || "0", 10);
 
       if (attempts >= MAX_ATTEMPTS && Date.now() < lockoutUntil) {
         showLockout();
@@ -316,8 +315,8 @@
           if (remaining <= 0) {
             clearInterval(timer);
             attempts = 0;
-            sessionStorage.setItem("pw_attempts", "0");
-            sessionStorage.removeItem("pw_lockout");
+            sessionStorage.setItem("nw_attempts", "0");
+            sessionStorage.removeItem("nw_lockout");
             document.getElementById("lockout").classList.remove("visible");
             document.getElementById("passcodeBtn").disabled = false;
             document.getElementById("passcodeInput").disabled = false;
@@ -349,11 +348,11 @@
 
         if (hash !== PASSWORD_HASH) {
           attempts = attempts + 1;
-          sessionStorage.setItem("pw_attempts", String(attempts));
+          sessionStorage.setItem("nw_attempts", String(attempts));
 
           if (attempts >= MAX_ATTEMPTS) {
             lockoutUntil = Date.now() + LOCKOUT_SECONDS * 1000;
-            sessionStorage.setItem("pw_lockout", String(lockoutUntil));
+            sessionStorage.setItem("nw_lockout", String(lockoutUntil));
             showLockout();
           } else {
             document.getElementById("error").classList.add("visible");
@@ -363,10 +362,9 @@
           return;
         }
 
-        sessionStorage.removeItem("pw_attempts");
-        sessionStorage.removeItem("pw_lockout");
-        document.getElementById("success").style.display = "block";
-        window.location.href = "/hr-tech/bewerbung.html";
+        sessionStorage.removeItem("nw_attempts");
+        sessionStorage.removeItem("nw_lockout");
+        window.location.href = "./bewerbung.html";
       };
     })();
   </script>

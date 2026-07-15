@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="de"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Marco Grotemeyer — Bewerbung Neurawork</title>
+  <style>
+    :root {
+      --b925-cream: #f6f5ef;
+      --b925-surface: #ffffff;
+      --b925-ink: #061026;
+      --b925-muted: #4a5878;
+      --b925-border: #dbdbdb;
+      --b925-teal: #35d6de;
+      --b925-cyan: #2299c4;
+      --b925-navy: #2a508d;
+      --b925-surface-glass: rgba(255,255,255,0.78);
+      --b925-border-alpha: rgba(20,35,75,0.08);
+      --b925-shadow: 0 2px 24px rgba(6,16,38,0.06);
+      --b925-ease: cubic-bezier(0.23, 1, 0.32, 1);
+      --font-display: 'Chillax', 'Satoshi', system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      --font-body: 'Satoshi', system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Monaco, Consolas, monospace;
+      --shell: #08090d;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: var(--shell);
+      font: 18px/1.5 var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .deck-shell { position: fixed; inset: 0; overflow: hidden; }
+    .deck-stage {
+      width: 1920px; height: 1080px;
+      background: var(--b925-cream);
+      position: relative;
+      transform-origin: top left;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+    }
+    .slide { position: absolute; inset: 0; overflow: hidden; }
+    .slide:not(.active) { display: none !important; }
+    :where(.slide.active) { display: flex; flex-direction: column; }
+
+    .deck-counter {
+      position: fixed; bottom: 22px; left: 50%;
+      transform: translateX(-50%);
+      display: inline-flex; align-items: center; gap: 4px;
+      background: rgba(10,14,26,0.92);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      padding: 6px; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #fff;
+      font: 12px/1 var(--font-mono); letter-spacing: 0.18em;
+      z-index: 1000;
+    }
+    .deck-counter button {
+      width: 36px; height: 36px;
+      background: transparent; color: #fff;
+      border: 0; border-radius: 50%;
+      font-size: 18px; line-height: 1; cursor: pointer;
+      display: grid; place-items: center;
+      transition: background 0.15s;
+    }
+    .deck-counter button:hover { background: rgba(255,255,255,0.12); }
+    .deck-counter button[disabled] { opacity: 0.3; cursor: default; }
+    .deck-counter .deck-count { padding: 0 14px; letter-spacing: 0.22em; }
+    .deck-counter .deck-count .total { color: rgba(255,255,255,0.5); }
+    .deck-hint {
+      position: fixed; bottom: 26px; right: 28px;
+      color: rgba(255,255,255,0.4);
+      font: 11px/1 var(--font-mono); letter-spacing: 0.2em;
+      text-transform: uppercase; z-index: 999; pointer-events: none;
+    }
+    @media print {
+      @page { size: 1920px 1080px; margin: 0; }
+      html,body{width:1920px!important;height:auto!important;overflow:visible!important;background:#fff!important}
+      .deck-shell{position:static!important;display:block!important;inset:auto!important}
+      .deck-stage{width:1920px!important;height:auto!important;transform:none!important;box-shadow:none!important;position:static!important}
+      .slide,.slide:not(.active),.slide.active{display:flex!important;flex-direction:column!important;position:relative!important;overflow:visible!important;inset:auto!important;width:1920px!important;height:1080px!important;page-break-after:always;break-after:page}
+      .slide:last-child{page-break-after:auto;break-after:auto}
+      .deck-counter,.deck-hint,.nav-bar{display:none!important}
+      .slide-footer{position:absolute!important;bottom:0!important;left:0!important;right:0!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(246,245,239,0.95)!important}
+    }
+  </style>
+  <style>
+    .s-layout { display:flex; flex-direction:column; width:100%; height:100%; }
+    .s-layout.s-title { justify-content:center; align-items:center; padding: 80px 160px 100px; }
+    .s-layout.s-letter { padding: 48px 120px 56px; }
+    .s-layout.s-cards { padding: 52px 100px 60px; }
+
+    .eyebrow {
+      display:inline-flex; align-items:center; gap:10px;
+      font-family: var(--font-body); font-size: 13px; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--b925-teal);
+      background: var(--b925-surface-glass); padding: 8px 20px 8px 14px;
+      border-radius: 999px; border: 1px solid var(--b925-border-alpha);
+    }
+    .eyebrow::before {
+      content:''; width:8px; height:8px; border-radius:50%;
+      background: radial-gradient(circle, #fff 20%, var(--b925-teal) 60%, var(--b925-navy) 100%);
+      animation: pulse-dot 3.6s ease-in-out infinite;
+    }
+    @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.5} }
+    @media (prefers-reduced-motion:reduce){.eyebrow::before{animation:none}}
+
+    h1 { font-family:var(--font-display); font-weight:600; }
+    h2 { font-family:var(--font-display); font-weight:500; }
+    h3 { font-family:var(--font-body); font-weight:600; }
+
+    .photo-frame { width:320px; height:320px; border-radius:40px; overflow:hidden; box-shadow: 0 4px 40px rgba(6,16,38,0.12); flex-shrink:0; }
+    .photo-frame img { width:100%; height:100%; object-fit:cover; }
+    .cta-btn {
+      display:inline-flex; align-items:center; gap:8px;
+      font-family:var(--font-body); font-size:18px; font-weight:600;
+      color:#fff; background:var(--b925-navy);
+      padding:14px 32px; border-radius:14px; border:none; cursor:pointer;
+      text-decoration:none; letter-spacing:0.01em;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .cta-btn:hover { background:var(--b925-ink); transform:translateY(-1px); }
+
+    .card {
+      background: var(--b925-surface-glass);
+      border: 1px solid var(--b925-border-alpha);
+      border-radius: 32px; padding: 40px; overflow-y:auto;
+      box-shadow: var(--b925-shadow);
+    }
+    .card h2 { font-size: 26px; color: var(--b925-ink); letter-spacing: -0.015em; margin-bottom: 20px; }
+    .card p, .card li { font-size: 18px; line-height:1.65; color:var(--b925-muted); }
+    .card ul { list-style:none; padding:0; }
+    .card ul li { padding:4px 0 4px 16px; position:relative; }
+    .card ul li::before { content:''; position:absolute; left:0; top:11px; width:4px; height:4px; border-radius:50%; background:var(--b925-teal); }
+
+    .slide-footer {
+      position:absolute; bottom:0; left:0; right:0;
+      padding:20px 140px;
+      display:flex; justify-content:space-between; align-items:center;
+      border-top:1px solid var(--b925-border-alpha);
+      background: rgba(246,245,239,0.92);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    }
+    .slide-footer span { font-size:15px; color:var(--b925-muted); letter-spacing:0.02em; }
+
+    .nav-bar {
+      position:fixed; top:0; left:0; right:0; z-index:500;
+      display:flex; justify-content:center; gap:32px;
+      padding:14px 40px;
+      background:rgba(8,9,13,0.92);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter:blur(16px);
+      border-bottom:1px solid rgba(255,255,255,0.08);
+    }
+    .nav-bar a {
+      font-family:var(--font-body); font-size:14px; font-weight:500;
+      letter-spacing:0.04em; color:rgba(255,255,255,0.55);
+      background:none; border:none; cursor:pointer; padding:6px 16px;
+      border-radius:999px; transition:all 0.15s; text-decoration:none;
+      display:flex; align-items:center; gap:8px;
+    }
+    .nav-bar a:hover { color:rgba(255,255,255,0.85); }
+    .nav-bar a:hover .nav-num { color:rgba(255,255,255,0.5); }
+    .nav-bar a.active { background:var(--b925-teal); color:#fff; font-weight:600; }
+    .nav-bar a.active .nav-num { color:rgba(255,255,255,0.8); }
+    .nav-num { font-family:var(--font-mono); font-size:11px; font-weight:600; letter-spacing:0.08em; color:rgba(255,255,255,0.3); transition:color 0.15s; }
+    .nav-back {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      font-size: 16px; color: rgba(255,255,255,0.4);
+      text-decoration: none; padding: 6px 12px;
+      border-radius: 999px; transition: all 0.15s;
+      display: flex; align-items: center;
+    }
+    .nav-back:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.08); }
+
+    .card.elevated { background: var(--b925-surface); box-shadow: 0 8px 48px rgba(6,16,38,0.08), 0 2px 8px rgba(6,16,38,0.04); border-color: rgba(20,35,75,0.12); }
+
+    .s-framework { padding: 60px 100px 0; }
+    .fw-eyecatch { text-align:center; margin-bottom:40px; }
+    .fw-eyecatch h2 { font-size:38px; color:var(--b925-ink); letter-spacing:-0.02em; margin-bottom:8px; }
+    .fw-eyecatch .fw-sub { font-size:18px; color:var(--b925-muted); font-weight:400; }
+
+    .s-projects { padding: 60px 100px 0; }
+    .proj-grid { display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:24px; flex:1; min-height:0; }
+    .proj-tile {
+      background:var(--b925-surface-glass); border:1px solid var(--b925-border-alpha);
+      border-radius:32px; padding:32px 36px; box-shadow:var(--b925-shadow);
+      display:flex; flex-direction:column; gap:14px;
+    }
+    .proj-tile h3 { font-family:var(--font-display); font-size:22px; font-weight:500; color:var(--b925-ink); letter-spacing:-0.01em; }
+    .proj-tile .proj-desc { font-size:15px; color:var(--b925-muted); line-height:1.5; flex-shrink:0; }
+    .proj-action { flex:1; display:flex; align-items:center; min-height:0; }
+    .proj-badges { display:flex; flex-wrap:wrap; gap:6px; border-top:1px solid var(--b925-border-alpha); padding-top:14px; }
+    .proj-badge { display:inline-block; padding:4px 12px; border-radius:999px; font-size:12px; font-weight:600; letter-spacing:0.03em; background:rgba(53,214,222,0.08); color:var(--b925-navy); }
+    .proj-link {
+      display:inline-flex; align-items:center; gap:8px;
+      font-family:var(--font-body); font-size:15px; font-weight:600;
+      color:var(--b925-navy); text-decoration:none;
+      padding:10px 20px; border-radius:14px; background:rgba(42,80,141,0.06);
+      transition:background 0.15s;
+    }
+    .proj-link:hover { background:rgba(42,80,141,0.12); }
+    .proj-link svg { flex-shrink:0; }
+    .proj-dl-btn {
+      display:inline-flex; align-items:center; gap:6px;
+      font-family:var(--font-body); font-size:13px; font-weight:600;
+      color:var(--b925-muted); text-decoration:none;
+      padding:8px 14px; border-radius:10px;
+      border:1px solid var(--b925-border-alpha); background:var(--b925-surface);
+      transition:all 0.15s; margin-right:8px; margin-bottom:6px;
+    }
+    .proj-dl-btn:hover { border-color:var(--b925-teal); color:var(--b925-navy); }
+    .proj-dl-btn svg { flex-shrink:0; }
+  </style>
+</head>
+<body>
+<div class="nav-bar" id="top-nav">
+  <a href="index.html" class="nav-back" aria-label="Zurück zur Neurawork Seite">←</a>
+  <a data-slide="0" class="active"><span class="nav-num">01</span> Titel</a>
+  <a data-slide="1"><span class="nav-num">02</span> Anschreiben</a>
+  <a data-slide="2"><span class="nav-num">03</span> Framework</a>
+  <a data-slide="3"><span class="nav-num">04</span> Lebenslauf</a>
+  <a data-slide="4"><span class="nav-num">05</span> Kausalleiter</a>
+  <a data-slide="5"><span class="nav-num">06</span> Projekte</a>
+</div>
+<div class="deck-shell">
+<div class="deck-stage" id="deck-stage">
+
+<!-- ================================ SLIDE 01 — TITEL ================================ -->
+<section class="slide active s-layout s-title" data-screen-label="01 Titel">
+  <div style="display:flex;align-items:center;gap:72px;max-width:1400px;width:100%">
+    <div class="photo-frame">
+      <img src="Teamfoto_Marco_2.jpg" alt="Marco Grotemeyer">
+    </div>
+    <div style="flex:1">
+      <div class="eyebrow" style="margin-bottom:24px">Bewerbung · Neurawork</div>
+      <h1 style="font-size:96px;color:var(--b925-ink);letter-spacing:-0.03em;line-height:1.04;margin-bottom:16px">Marco Grotemeyer</h1>
+      <p style="font-size:34px;color:var(--b925-muted);font-weight:400;letter-spacing:-0.006em;line-height:1.3;margin-bottom:28px">Consultant Operational AI / KI-Implementierung (m/w/d)</p>
+      <a href="#" class="cta-btn">
+        Lerne Marco kennen
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
+      </a>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Marco Grotemeyer</span>
+    <span>marcogrotemeyer@icloud.com · 0151 5340 5401</span>
+    <span>Bad Oeynhausen, NRW</span>
+  </div>
+</section>
+
+<!-- ================================ SLIDE 02 — ANSCHREIBEN ================================ -->
+<section class="slide s-layout s-letter" data-screen-label="02 Anschreiben" style="padding:48px 120px 56px 120px">
+  <div style="display:flex;align-items:center;justify-content:center;height:100%;width:100%">
+    <div style="max-width:1920px;width:100%;background:var(--b925-surface-glass);border:1px solid var(--b925-border-alpha);border-radius:32px;padding:40px 72px 36px;box-shadow:var(--b925-shadow)">
+      <p style="font-size:23px;color:var(--b925-ink);font-weight:500;margin-bottom:18px;font-family:var(--font-display);letter-spacing:-0.01em">Sehr geehrter Herr Knöll,<br>sehr geehrte Frau Knöll, sehr geehrtes Team Neurawork,</p>
+      <p style="font-size:18px;color:var(--b925-muted);line-height:1.55;margin-bottom:14px">Sie suchen jemanden, der KI nicht als Buzzword, sondern als Werkzeug versteht — der Use Cases nach Business Impact priorisiert, in eine robuste Zielarchitektur übersetzt und deren Implementierung bis zur Adoption begleitet. Genau das ist meine DNA.</p>
+      <p style="font-size:18px;color:var(--b925-muted);line-height:1.55;margin-bottom:14px">Ich habe Beyond925 aufgebaut — ein Unternehmen, das Employer Branding und Azubi-Recruiting für den Mittelstand digitalisiert. KI-Agenten-Funnel, Voice-Agent, CRM-Integration, DSGVO-konforme Architektur. Alles aus einer Hand, alles live bei regulierten Kunden. Ich habe nicht über KI beraten — ich habe KI in echte Geschäftsprozesse gebracht. Von der Use-Case-Identifikation über die Architektur-Entscheidung bis zur messbaren Adoption im Kundenbetrieb.</p>
+      <p style="font-family:var(--font-display);font-size:26px;font-weight:500;color:var(--b925-navy);line-height:1.2;letter-spacing:-0.015em;margin-bottom:14px;padding-left:24px;border-left:3px solid var(--b925-teal)">Use Cases entfalten erst dann Wert, wenn Problem, Prozess, Technologie und Adoption zusammenpassen.</p>
+      <p style="font-size:18px;color:var(--b925-muted);line-height:1.55;margin-bottom:14px">Das ist kein Zitat aus einem Lehrbuch. Das habe ich in zwei Jahren als Bootstrapper gelernt. Ich brenne dafür, wertvolle Anwendungsfälle zu identifizieren, sie in eine robuste Zielarchitektur zu übersetzen und deren standardisierte, kundenintegrierte Implementierung inklusive Adoption zu führen. Nicht der nächste Pilot — ein nachhaltig verankerter Leistungshebel.</p>
+      <p style="font-size:18px;color:var(--b925-muted);line-height:1.55;margin-bottom:14px">Meine Erfahrung ist nicht primär in einer klassischen Beratungspyramide entstanden, sondern unternehmerisch und direkt am Kundenproblem. Ich bringe Ownership, kommerzielles Verständnis und operative KI-Umsetzung. Genau diese Brücke aus Strategie, Implementierung und Change möchte ich bei Neurawork für Mittelstandskunden skalieren.</p>
+      <p style="font-size:18px;color:var(--b925-muted);line-height:1.55;margin-bottom:16px">Ihre Anti-Hype-Positionierung und Ihr framework-basierter Ansatz passen zu meiner DNA. Ich will nicht über KI reden — ich will Wirkung in Unternehmen bringen.</p>
+      <p style="font-family:var(--font-display);font-size:24px;font-weight:600;color:var(--b925-navy);letter-spacing:-0.015em;margin-bottom:22px">Marco Grotemeyer</p>
+      <div style="height:1px;background:var(--b925-border-alpha);margin:0 0 18px 0"></div>
+      <p style="font-family:var(--font-display);font-size:14px;font-weight:500;color:var(--b925-teal);letter-spacing:0.02em;margin-bottom:12px">Neurawork sucht → Marco bringt</p>
+      <div style="display:flex;gap:12px">
+        <div style="flex:1;background:rgba(42,80,141,0.03);border-radius:16px;padding:14px 14px">
+          <p style="font-size:10px;font-weight:600;color:var(--b925-teal);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">KI-Strategie & Implementierung</p>
+          <p style="font-size:13px;color:var(--b925-muted);line-height:1.5">AI-gestützte Recruiting- & Marketingprozesse entwickelt, KI-Agenten-Funnel live bei regulierten Kunden</p>
+        </div>
+        <div style="flex:1;border-radius:16px;padding:14px 14px">
+          <p style="font-size:10px;font-weight:600;color:var(--b925-teal);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">Funktionsübergreifend</p>
+          <p style="font-size:13px;color:var(--b925-muted);line-height:1.5">Recruiting, Marketing, Sales, Operations, CRM — ganzheitliche Prozessintegration statt Silo-Denken</p>
+        </div>
+        <div style="flex:1;background:rgba(42,80,141,0.03);border-radius:16px;padding:14px 14px">
+          <p style="font-size:10px;font-weight:600;color:var(--b925-teal);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">LLMs, RAG, Agentic AI</p>
+          <p style="font-size:13px;color:var(--b925-muted);line-height:1.5">KI-Agenten, Voice AI, OpenCode, LLM-Orchestrierung — technische Tiefe mit Geschäftsfokus</p>
+        </div>
+        <div style="flex:1;border-radius:16px;padding:14px 14px">
+          <p style="font-size:10px;font-weight:600;color:var(--b925-teal);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">Change & Adoption</p>
+          <p style="font-size:13px;color:var(--b925-muted);line-height:1.5">Workshops, Training, Stakeholder-Enablement — neue Workflows bei Kunden und Teams verankert</p>
+        </div>
+        <div style="flex:1;background:rgba(42,80,141,0.03);border-radius:16px;padding:14px 14px">
+          <p style="font-size:10px;font-weight:600;color:var(--b925-teal);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">Ownership & Kundenführung</p>
+          <p style="font-size:13px;color:var(--b925-muted);line-height:1.5">Gründer-/CEO-Erfahrung, Business Development, operative Mandatsverantwortung</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Marco Grotemeyer</span>
+    <span>marcogrotemeyer@icloud.com · 0151 5340 5401</span>
+    <span>Bad Oeynhausen, NRW</span>
+  </div>
+</section>
+
+<!-- ================================ SLIDE 03 — OPERATIONAL AI FRAMEWORK ================================ -->
+<section class="slide s-layout s-cards" data-screen-label="03 Framework" style="padding-top:48px;padding-bottom:56px">
+  <div style="display:flex;align-items:center;justify-content:center;margin-bottom:8px;flex-shrink:0">
+    <div class="fw-eyecatch" style="margin-bottom:0">
+      <h2 style="font-size:32px;font-weight:600">Operational AI Framework</h2>
+      <p class="fw-sub" style="font-size:16px">Von der strategischen Analyse bis zur skalierten KI-Implementierung im Mittelstand</p>
+    </div>
+  </div>
+  <div style="display:flex;gap:28px;height:100%">
+    <div style="width:290px;flex-shrink:0;background:var(--b925-surface-glass);border:1px solid var(--b925-border-alpha);border-radius:32px;padding:24px 20px;box-shadow:var(--b925-shadow);overflow-y:auto">
+      <h2 style="font-family:var(--font-display);font-size:19px;font-weight:500;color:var(--b925-ink);letter-spacing:-0.01em;margin-bottom:12px">Kompetenzen</h2>
+      <ul style="display:flex;flex-direction:column;gap:5px;list-style:none;padding:0">
+        <li style="font-size:13px;padding:5px 8px;border-radius:8px;background:rgba(53,214,222,0.06);display:flex;align-items:baseline;gap:10px;color:var(--b925-muted)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="flex-shrink:0;margin-top:3px;color:var(--b925-teal)"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="6" x2="12" y2="12"></line><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>KI-Strategie & Business Impact</li>
+        <li style="font-size:13px;padding:5px 8px;border-radius:8px;background:rgba(53,214,222,0.06);display:flex;align-items:baseline;gap:10px;color:var(--b925-muted)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="flex-shrink:0;margin-top:3px;color:var(--b925-teal)"><rect x="4" y="4" width="16" height="5" rx="1"></rect><rect x="4" y="11" width="16" height="5" rx="1"></rect><rect x="4" y="18" width="16" height="2" rx="1"></rect></svg>Use-Case-Priorisierung</li>
+        <li style="font-size:13px;padding:5px 8px;border-radius:8px;background:rgba(53,214,222,0.06);display:flex;align-items:baseline;gap:10px;color:var(--b925-muted)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="flex-shrink:0;margin-top:3px;color:var(--b925-teal)"><path d="M12 2a3 3 0 0 0-3 3v1a3 3 0 0 0 3 3 3 3 0 0 0 3-3V5a3 3 0 0 0-3-3z"></path><circle cx="12" cy="15" r="3"></circle><path d="M12 11v-1"></path></svg>KI-Implementierung</li>
+        <li style="font-size:13px;padding:5px 8px;border-radius:8px;background:rgba(53,214,222,0.06);display:flex;align-items:baseline;gap:10px;color:var(--b925-muted)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="flex-shrink:0;margin-top:3px;color:var(--b925-teal)"><circle cx="12" cy="5" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="12" cy="19" r="2"></circle><path d="M12 7v3"></path><path d="M12 14v3"></path></svg>Workflow-Automation</li>
+        <li style="font-size:13px;padding:5px 8px;border-radius:8px;background:rgba(53,214,222,0.06);display:flex;align-items:baseline;gap:10px;color:var(--b925-muted)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="flex-shrink:0;margin-top:3px;color:var(--b925-teal)"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>Prozessintegration</li>
+        <li style="font-size:13px;padding:5px 8px;border-radius:8px;background:rgba(53,214,222,0.06);display:flex;align-items:baseline;gap:10px;color:var(--b925-muted)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="flex-shrink:0;margin-top:3px;color:var(--b925-teal)"><path d="M1 12s3-7 11-7 11 7 11 7-3 7-11 7-11-7-11-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>Change & Adoption</li>
+        <li style="font-size:13px;padding:5px 8px;border-radius:8px;background:rgba(53,214,222,0.06);display:flex;align-items:baseline;gap:10px;color:var(--b925-muted)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="flex-shrink:0;margin-top:3px;color:var(--b925-teal)"><circle cx="9" cy="7" r="3"></circle><path d="M9 10c-4 0-7 3-7 7h14c0-4-3-7-7-7z"></path><circle cx="18" cy="7" r="2.5"></circle><path d="M18 9.5c-3 0-5.5 2-5.5 5.5h11c0-3.5-2.5-5.5-5.5-5.5z"></path></svg>Stakeholder-Enablement</li>
+        <li style="font-size:13px;padding:5px 8px;border-radius:8px;background:rgba(53,214,222,0.06);display:flex;align-items:baseline;gap:10px;color:var(--b925-muted)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="flex-shrink:0;margin-top:3px;color:var(--b925-teal)"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>DSGVO & Compliance</li>
+        <li style="font-size:13px;padding:5px 8px;border-radius:8px;background:rgba(53,214,222,0.06);display:flex;align-items:baseline;gap:10px;color:var(--b925-muted)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="flex-shrink:0;margin-top:3px;color:var(--b925-teal)"><rect x="2" y="3" width="20" height="14" rx="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path></svg>Roadmap & Workshop</li>
+        <li style="font-size:13px;padding:5px 8px;border-radius:8px;background:rgba(53,214,222,0.06);display:flex;align-items:baseline;gap:10px;color:var(--b925-muted)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="flex-shrink:0;margin-top:3px;color:var(--b925-teal)"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>Prompt Engineering</li>
+      </ul>
+    </div>
+    <div style="flex:1;display:flex;justify-content:center;align-items:center;min-width:0">
+      <div style="display:flex;flex-direction:column;gap:0;width:100%;max-width:680px;position:relative">
+        <div style="position:absolute;left:36px;top:60px;bottom:60px;width:2px;background:var(--b925-border-alpha);z-index:0"></div>
+        <!-- Step 1 -->
+        <div style="position:relative;z-index:1;display:flex;gap:20px;padding:12px 0">
+          <div style="width:72px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px">
+            <div style="width:48px;height:48px;border-radius:50%;background:var(--b925-navy);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:20px;font-weight:600;color:#fff">01</div>
+          </div>
+          <div style="flex:1;background:var(--b925-surface-glass);border:1px solid var(--b925-border-alpha);border-radius:20px;padding:16px 20px;box-shadow:var(--b925-shadow)">
+            <p style="font-family:var(--font-display);font-size:15px;font-weight:600;color:var(--b925-ink);margin-bottom:4px">Geschäftsziele & Engpässe verstehen</p>
+            <p style="font-size:13px;color:var(--b925-muted);line-height:1.5;margin-bottom:8px">Nicht mit einem Tool starten, sondern mit Wertschöpfung, Prozessen und relevanten Problemen. Wo entsteht Reibung? Wo entgeht Wert?</p>
+            <div style="display:flex;flex-wrap:wrap;gap:4px">
+              <span style="display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.08);color:var(--b925-navy)">KI-Strategie</span>
+              <span style="display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.08);color:var(--b925-navy)">Workshop</span>
+              <span style="display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.08);color:var(--b925-navy)">Prozessanalyse</span>
+            </div>
+          </div>
+        </div>
+        <!-- Step 2 -->
+        <div style="position:relative;z-index:1;display:flex;gap:20px;padding:12px 0">
+          <div style="width:72px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px">
+            <div style="width:48px;height:48px;border-radius:50%;background:var(--b925-ink);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:20px;font-weight:600;color:#fff">02</div>
+          </div>
+          <div style="flex:1;background:var(--b925-surface-glass);border:1px solid var(--b925-border-alpha);border-radius:20px;padding:16px 20px;box-shadow:var(--b925-shadow)">
+            <p style="font-family:var(--font-display);font-size:15px;font-weight:600;color:var(--b925-ink);margin-bottom:4px">Use Cases bewerten & priorisieren</p>
+            <p style="font-size:13px;color:var(--b925-muted);line-height:1.5;margin-bottom:8px">Wirkung, Umsetzbarkeit, Datenreife, Risiko und Change-Aufwand transparent bewerten. Use-Case-Backlog mit klarer Priorisierungslogik.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:4px">
+              <span style="display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.08);color:var(--b925-navy)">Use-Case-Priorisierung</span>
+              <span style="display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.08);color:var(--b925-navy)">Roadmap</span>
+              <span style="display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.08);color:var(--b925-navy)">Business Impact</span>
+            </div>
+          </div>
+        </div>
+        <!-- Step 3 -->
+        <div style="position:relative;z-index:1;display:flex;gap:20px;padding:12px 0">
+          <div style="width:72px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px">
+            <div style="width:48px;height:48px;border-radius:50%;background:var(--b925-ink);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:20px;font-weight:600;color:#fff">03</div>
+          </div>
+          <div style="flex:1;background:var(--b925-surface-glass);border:1px solid var(--b925-border-alpha);border-radius:20px;padding:16px 20px;box-shadow:var(--b925-shadow)">
+            <p style="font-family:var(--font-display);font-size:15px;font-weight:600;color:var(--b925-ink);margin-bottom:4px">Implementierung & Integration</p>
+            <p style="font-size:13px;color:var(--b925-muted);line-height:1.5;margin-bottom:8px">Bestehende Arbeitsabläufe, Systeme und Rollen einbeziehen — nicht neben dem Tagesgeschäft, sondern darin. Architektur, Governance, Human-in-the-loop.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:4px">
+              <span style="display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.08);color:var(--b925-navy)">KI-Implementierung</span>
+              <span style="display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.08);color:var(--b925-navy)">Prozessintegration</span>
+              <span style="display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.08);color:var(--b925-navy)">DSGVO & Compliance</span>
+            </div>
+          </div>
+        </div>
+        <!-- Step 4 -->
+        <div style="position:relative;z-index:1;display:flex;gap:20px;padding:12px 0">
+          <div style="width:72px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px">
+            <div style="width:48px;height:48px;border-radius:50%;background:var(--b925-teal);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:20px;font-weight:600;color:#fff">04</div>
+          </div>
+          <div style="flex:1;background:rgba(53,214,222,0.06);border:1px solid rgba(53,214,222,0.15);border-radius:20px;padding:16px 20px;box-shadow:var(--b925-shadow)">
+            <p style="font-family:var(--font-display);font-size:15px;font-weight:600;color:var(--b925-ink);margin-bottom:4px">Change, Adoption & Skalierung</p>
+            <p style="font-size:13px;color:var(--b925-muted);line-height:1.5;margin-bottom:8px">Mitarbeitende befähigen, Führungskräfte einbinden, Nutzung messen und erfolgreiche Muster skalieren. Transformation gelingt nur mit den Teams, die sie leben.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:4px">
+              <span style="display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.12);color:var(--b925-navy)">Change & Adoption</span>
+              <span style="display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.12);color:var(--b925-navy)">Enablement</span>
+              <span style="display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.12);color:var(--b925-navy)">Skalierung</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="width:310px;flex-shrink:0;display:flex;flex-direction:column;gap:16px">
+      <div style="background:var(--b925-surface-glass);border:1px solid var(--b925-border-alpha);border-radius:32px;padding:22px 24px;box-shadow:var(--b925-shadow);flex:1">
+        <h2 style="font-family:var(--font-display);font-size:19px;font-weight:500;color:var(--b925-ink);letter-spacing:-0.01em;margin-bottom:12px">Warum Neurawork</h2>
+        <p style="font-size:14px;color:var(--b925-muted);line-height:1.6;margin-bottom:12px">Neuraworks Haltung passt zu meiner DNA: Keine Folienberatung, kein KI-Hype — sondern klar strukturierte Umsetzung mit messbarer Geschäftswirkung. Use Cases identifizieren, in robuste Architektur übersetzen, standardisiert implementieren, Adoption sicherstellen.</p>
+        <p style="font-size:13px;font-weight:600;color:var(--b925-navy);line-height:1.5">Die Verbindung aus Kundenprojekten, KI-Business-Coaching und Produktisierung ist ein starker Hebel, um Erkenntnisse systematisch zu multiplizieren. Genau diese Skalierung von Wirkung will ich mitgestalten.</p>
+      </div>
+      <div style="background:var(--b925-surface-glass);border:1px solid var(--b925-border-alpha);border-radius:32px;padding:18px 24px;box-shadow:var(--b925-shadow)">
+        <h2 style="font-family:var(--font-display);font-size:15px;font-weight:500;color:var(--b925-ink);letter-spacing:-0.01em;margin-bottom:8px">Tech-Stack</h2>
+        <p style="font-size:12px;color:var(--b925-muted);line-height:1.6">OpenAI, Claude, ElevenLabs, Qwen · n8n, Make, CAPI · HubSpot (1.400), Meta/TikTok · Next.js, TypeScript, Supabase</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Marco Grotemeyer</span>
+    <span>marcogrotemeyer@icloud.com · 0151 5340 5401</span>
+    <span>Bad Oeynhausen, NRW</span>
+  </div>
+</section>
+
+<!-- ================================ SLIDE 04 — LEBENSLAUF ================================ -->
+<section class="slide s-layout s-cards" data-screen-label="04 Lebenslauf" style="padding-top:48px;padding-bottom:56px">
+  <div style="display:flex;align-items:center;justify-content:center;margin-bottom:24px;flex-shrink:0">
+    <div style="position:relative;display:flex;align-items:center;gap:120px;max-width:1100px;width:100%">
+      <div style="position:absolute;left:24px;right:24px;top:19px;height:2px;background:var(--b925-border-alpha);z-index:0"></div>
+      <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:8px;flex:1">
+        <div style="width:40px;height:40px;border-radius:50%;background:var(--b925-navy);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:13px;font-weight:600;color:#fff">1</div>
+        <p style="font-size:12px;font-weight:600;color:var(--b925-ink);text-align:center">Bundeswehr</p>
+        <p style="font-size:10px;color:var(--b925-muted);text-align:center">2015–2018</p>
+      </div>
+      <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:8px;flex:1">
+        <div style="width:40px;height:40px;border-radius:50%;background:var(--b925-ink);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:13px;font-weight:600;color:#fff">2</div>
+        <p style="font-size:12px;font-weight:600;color:var(--b925-ink);text-align:center">clever fit</p>
+        <p style="font-size:10px;color:var(--b925-muted);text-align:center">2019–2022</p>
+      </div>
+      <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:8px;flex:1">
+        <div style="width:40px;height:40px;border-radius:50%;background:var(--b925-ink);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:13px;font-weight:600;color:#fff">3</div>
+        <p style="font-size:12px;font-weight:600;color:var(--b925-ink);text-align:center">Kobe Sports</p>
+        <p style="font-size:10px;color:var(--b925-muted);text-align:center">2023–2024</p>
+      </div>
+      <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:8px;flex:1">
+        <div style="width:40px;height:40px;border-radius:50%;background:var(--b925-teal);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:13px;font-weight:600;color:#fff">4</div>
+        <p style="font-size:12px;font-weight:600;color:var(--b925-ink);text-align:center">Beyond925 UG</p>
+        <p style="font-size:10px;color:var(--b925-muted);text-align:center">seit 2024</p>
+      </div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px;flex:1;min-height:0">
+    <div class="card">
+      <h2>Berufserfahrung</h2>
+      <div style="margin-bottom:16px">
+        <h3 style="font-size:17px;color:var(--b925-ink);margin-bottom:2px">Gründer &amp; Geschäftsführer</h3>
+        <p style="font-size:14px;color:var(--b925-teal);font-weight:600;margin-bottom:6px">Beyond925 UG · seit Dez 2024</p>
+        <ul>
+          <li>Web-App / KI-Agenten-Funnel für Employer Branding &amp; Azubi-Recruiting</li>
+          <li>DSGVO-konforme KI-Architektur für Geschäftsprozesse</li>
+          <li>HubSpot-CRM mit 1.400 Kontakten, Lead-Scoring, Meta Ads + CAPI</li>
+        </ul>
+      </div>
+      <div style="margin-bottom:16px">
+        <h3 style="font-size:17px;color:var(--b925-ink);margin-bottom:2px">Digital Transformation Lead</h3>
+        <p style="font-size:14px;color:var(--b925-teal);font-weight:600;margin-bottom:6px">Kobe Sports GmbH · 2023–2024</p>
+        <ul>
+          <li>Unterstützung der Geschäftsführung mit Fokus auf Franchise-Expansion. Aufbau digitaler Unternehmensstrukturen sowie innovativer Gesundheitskonzepte.</li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="font-size:17px;color:var(--b925-ink);margin-bottom:2px">Operations Director</h3>
+        <p style="font-size:14px;color:var(--b925-teal);font-weight:600;margin-bottom:6px">clever fit · 2020–2023</p>
+        <ul>
+          <li>Operativer Aufbau und Führung eines Fitnessclubs. KPI-basierte Performance-Steuerung, Personalmanagement und Teamführung.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card elevated">
+      <h2>Stationen &amp; Validierung</h2>
+      <div style="margin-bottom:16px">
+        <h3 style="font-size:16px;color:var(--b925-ink);margin-bottom:6px">Auszeichnungen</h3>
+        <p style="font-size:15px;line-height:1.6;color:var(--b925-muted)">
+          Public Prize — Founders Foundation<br>
+          Finalist — Social Impact Award<br>
+          3. Platz — PitchMiUp Night
+        </p>
+      </div>
+      <div style="margin-bottom:16px">
+        <h3 style="font-size:16px;color:var(--b925-ink);margin-bottom:6px">Vorträge</h3>
+        <p style="font-size:15px;line-height:1.6;color:var(--b925-muted)">
+          GenAI Connect #6 — Fraunhofer IEM<br>
+          "7.000 € pro Fehlbesetzung — War for Talents 2.0"<br><br>
+          Kreishandwerkerschaft Paderborn<br>
+          "KI im Handwerk — Wie wir junge Menschen in die Praxis bringen"<br><br>
+          GESW<br>
+          "Wie Social Media unsere Wahrnehmung, Entscheidungen und Berufswahl verändern wird"
+        </p>
+      </div>
+      <div style="margin-bottom:16px">
+        <h3 style="font-size:16px;color:var(--b925-ink);margin-bottom:6px">Förderprogramme</h3>
+        <p style="font-size:15px;line-height:1.6;color:var(--b925-muted)">
+          NRW-Gründerstipendium<br>
+          Founders Foundation Lab<br>
+          Pioneer Lab Incubator + Accelerator
+        </p>
+      </div>
+      <div>
+        <h3 style="font-size:16px;color:var(--b925-ink);margin-bottom:6px">Weitere Stationen</h3>
+        <p style="font-size:15px;line-height:1.6;color:var(--b925-muted)">
+          Gründer &amp; Coach — erhebedich (2024)<br>
+          Soldat auf Zeit — Bundeswehr (2015–2018)
+        </p>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Bildung &amp; Profil</h2>
+      <div style="margin-bottom:14px">
+        <h3 style="font-size:16px;color:var(--b925-ink);margin-bottom:6px">Bildung</h3>
+        <p style="font-size:15px;line-height:1.6;color:var(--b925-muted)">
+          Duales Studium Sport- &amp; Fitnessmanagement<br>
+          IST-Hochschule (2020–2023)
+        </p>
+        <p style="font-size:15px;line-height:1.6;color:var(--b925-muted);margin-top:6px">
+          IHK Psych. Management-Trainer &amp; Coach (2023)
+        </p>
+        <p style="font-size:15px;line-height:1.6;color:var(--b925-muted);margin-top:6px">
+          Fachabitur — Freiherr-vom-Stein-Berufskolleg
+        </p>
+      </div>
+      <div style="margin-bottom:14px">
+        <h3 style="font-size:16px;color:var(--b925-ink);margin-bottom:6px">Sprachen</h3>
+        <p style="font-size:15px;color:var(--b925-muted)">Deutsch — Muttersprache</p>
+        <p style="font-size:15px;color:var(--b925-muted)">Englisch — B2/C1</p>
+      </div>
+      <div style="margin-bottom:14px">
+        <h3 style="font-size:16px;color:var(--b925-ink);margin-bottom:6px">KI &amp; Digitalisierung</h3>
+        <p style="font-size:14px;color:var(--b925-muted);line-height:1.5">KI-Agenten, LLM-Orchestrierung, Workflow-Automation, Use-Case-Priorisierung, Workshop-Moderation, Stakeholder-Enablement</p>
+      </div>
+      <div>
+        <h3 style="font-size:16px;color:var(--b925-ink);margin-bottom:6px">Verfügbarkeit &amp; Ehrenamt</h3>
+        <p style="font-size:14px;color:var(--b925-muted);line-height:1.5">Ab sofort, 100% remote, Standort OWL/NRW — EU-weit mobil. Mentor Deutscher Gründerpreis, Seniorenbetreuung Diakonie.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Marco Grotemeyer</span>
+    <span>marcogrotemeyer@icloud.com · 0151 5340 5401</span>
+    <span>Bad Oeynhausen, NRW</span>
+  </div>
+</section>
+
+<!-- ================================ SLIDE 05 — KAUSALLEITER ================================ -->
+<section class="slide s-layout s-framework" data-screen-label="05 Kausalleiter" style="padding-bottom:50px">
+  <div class="fw-eyecatch">
+    <h2>Wo KI Muster erkennt — und wo Menschen Transformation tragen</h2>
+    <p class="fw-sub">Die Kausalleiter als Rahmen für Operational AI im Mittelstand</p>
+  </div>
+  <div style="flex:1;min-height:0;display:flex;justify-content:center;align-items:center;padding:0">
+    <svg viewBox="0 0 1720 740" style="width:100%;height:100%" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="connector-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#35d6de" stop-opacity="0.5"></stop>
+          <stop offset="50%" stop-color="#2299c4" stop-opacity="0.4"></stop>
+          <stop offset="100%" stop-color="#2a508d" stop-opacity="0.6"></stop>
+        </linearGradient>
+      </defs>
+      <line x1="530" y1="180" x2="530" y2="240" stroke="url(#connector-grad)" stroke-width="2"></line>
+      <line x1="530" y1="390" x2="530" y2="450" stroke="url(#connector-grad)" stroke-width="2"></line>
+      <circle cx="530" cy="210" r="5" fill="#2a508d" opacity="0.5"></circle>
+      <circle cx="530" cy="420" r="5" fill="#35d6de" opacity="0.5"></circle>
+      <!-- STEP 3 — Kontrafaktisch -->
+      <rect x="10" y="30" width="1060" height="150" rx="24" fill="#f6f5ef" stroke="#35d6de" stroke-opacity="0.25" stroke-width="1.5"></rect>
+      <circle cx="54" cy="105" r="30" fill="rgba(53,214,222,0.15)"></circle>
+      <text x="54" y="114" text-anchor="middle" font-family="var(--font-display)" font-size="24" font-weight="600" fill="#061026">03</text>
+      <line x1="96" y1="55" x2="96" y2="155" stroke="rgba(53,214,222,0.25)" stroke-width="1"></line>
+      <text x="120" y="82" font-family="var(--font-display)" font-size="22" font-weight="500" fill="#061026" letter-spacing="-0.01em">»Was wäre gewesen, wenn …?«</text>
+      <text x="120" y="112" font-family="var(--font-body)" font-size="15" font-weight="600" fill="#2a508d">Kontrafaktisches Denken &amp; Verstehen</text>
+      <text x="120" y="138" font-family="var(--font-body)" font-size="14" fill="#4a5878">Alternative Geschäftsszenarien durchspielen — Prozesse neu denken, Wertschöpfung anders framen</text>
+      <text x="780" y="79" font-family="var(--font-body)" font-size="14" font-weight="700" fill="#4a5878" text-anchor="end" letter-spacing="0.06em">KI</text>
+      <rect x="790" y="72" width="140" height="8" rx="4" fill="rgba(53,214,222,0.12)"></rect>
+      <rect x="790" y="72" width="21" height="8" rx="4" fill="#35d6de"></rect>
+      <text x="940" y="79" font-family="var(--font-body)" font-size="14" font-weight="600" fill="#4a5878" letter-spacing="0.04em">kaum vorhanden</text>
+      <!-- STEP 2 — Kausal -->
+      <rect x="10" y="240" width="1060" height="150" rx="24" fill="#f6f5ef" stroke="#35d6de" stroke-opacity="0.3" stroke-width="1.5"></rect>
+      <circle cx="54" cy="315" r="30" fill="rgba(53,214,222,0.2)"></circle>
+      <text x="54" y="324" text-anchor="middle" font-family="var(--font-display)" font-size="24" font-weight="600" fill="#061026">02</text>
+      <line x1="96" y1="265" x2="96" y2="365" stroke="rgba(53,214,222,0.3)" stroke-width="1"></line>
+      <text x="120" y="292" font-family="var(--font-display)" font-size="22" font-weight="500" fill="#061026" letter-spacing="-0.01em">»Was passiert, wenn ich X tue?«</text>
+      <text x="120" y="322" font-family="var(--font-body)" font-size="15" font-weight="600" fill="#2a508d">Kausales Denken &amp; Verstehen</text>
+      <text x="120" y="348" font-family="var(--font-body)" font-size="14" fill="#4a5878">Aktiv eingreifen: Prozess-KPIs tracken, KI-Experimente auswerten, Wirkung messbar machen</text>
+      <text x="780" y="289" font-family="var(--font-body)" font-size="14" font-weight="700" fill="#2a508d" text-anchor="end" letter-spacing="0.06em">KI</text>
+      <rect x="790" y="282" width="140" height="8" rx="4" fill="rgba(53,214,222,0.15)"></rect>
+      <rect x="790" y="282" width="70" height="8" rx="4" fill="#35d6de"></rect>
+      <text x="940" y="289" font-family="var(--font-body)" font-size="14" font-weight="600" fill="#2a508d" letter-spacing="0.04em">begrenzt</text>
+      <!-- STEP 1 — Assoziativ -->
+      <rect x="10" y="450" width="1060" height="150" rx="24" fill="#2a508d"></rect>
+      <circle cx="54" cy="525" r="30" fill="rgba(0,0,0,0.15)"></circle>
+      <text x="54" y="534" text-anchor="middle" font-family="var(--font-display)" font-size="24" font-weight="600" fill="#fff">01</text>
+      <line x1="96" y1="475" x2="96" y2="575" stroke="rgba(255,255,255,0.2)" stroke-width="1"></line>
+      <text x="120" y="502" font-family="var(--font-display)" font-size="22" font-weight="500" fill="#fff" letter-spacing="-0.01em">»Was tritt gemeinsam auf?«</text>
+      <text x="120" y="532" font-family="var(--font-body)" font-size="15" font-weight="600" fill="rgba(255,255,255,0.85)">Assoziatives Denken &amp; Verstehen</text>
+      <text x="120" y="558" font-family="var(--font-body)" font-size="14" fill="rgba(255,255,255,0.7)">Muster in Geschäftsdaten erkennen — Prozessengpässe, Kundenverhalten, operative Ineffizienzen</text>
+      <text x="780" y="499" font-family="var(--font-body)" font-size="14" font-weight="700" fill="rgba(255,255,255,0.85)" text-anchor="end" letter-spacing="0.06em">KI</text>
+      <rect x="790" y="492" width="140" height="8" rx="4" fill="rgba(255,255,255,0.15)"></rect>
+      <rect x="790" y="492" width="126" height="8" rx="4" fill="#35d6de"></rect>
+      <text x="940" y="499" font-family="var(--font-body)" font-size="14" font-weight="600" fill="#35d6de" letter-spacing="0.04em">stark</text>
+      <!-- RIGHT — Loop Diagram -->
+      <rect x="1140" y="30" width="560" height="260" rx="24" fill="var(--b925-surface)" fill-opacity="0.78" stroke="var(--b925-border)" stroke-opacity="0.5" stroke-width="1"></rect>
+      <text x="1420" y="58" text-anchor="middle" font-family="var(--font-body)" font-size="15" font-weight="600" fill="#4a5878" letter-spacing="0.04em">Intelligentes Verhalten</text>
+      <rect x="1170" y="80" width="190" height="60" rx="18" fill="#2a508d" fill-opacity="0.08"></rect>
+      <text x="1265" y="106" text-anchor="middle" font-family="var(--font-body)" font-size="13" font-weight="600" fill="#061026" letter-spacing="0.02em">Erfahrungslernen</text>
+      <text x="1265" y="124" text-anchor="middle" font-family="var(--font-body)" font-size="10" fill="#4a5878">Strukturbildung &amp; Anpassung</text>
+      <rect x="1480" y="80" width="190" height="60" rx="18" fill="#35d6de" fill-opacity="0.1"></rect>
+      <text x="1575" y="106" text-anchor="middle" font-family="var(--font-body)" font-size="13" font-weight="600" fill="#061026" letter-spacing="0.02em">Denken</text>
+      <text x="1575" y="124" text-anchor="middle" font-family="var(--font-body)" font-size="10" fill="#4a5878">Strukturnutzung</text>
+      <path d="M1360,110 C1385,85 1395,135 1420,110 C1445,85 1455,135 1480,110" stroke="#35d6de" stroke-width="2" fill="none" stroke-linecap="round"></path>
+      <path d="M1360,110 C1385,135 1395,85 1420,110 C1445,135 1455,85 1480,110" stroke="#35d6de" stroke-width="2" fill="none" stroke-linecap="round"></path>
+      <rect x="1355" y="165" width="130" height="34" rx="17" fill="var(--b925-surface)" stroke="#35d6de" stroke-opacity="0.3" stroke-width="1"></rect>
+      <text x="1420" y="188" text-anchor="middle" font-family="var(--font-display)" font-size="20" font-weight="600" fill="#35d6de">∞</text>
+      <text x="1420" y="230" text-anchor="middle" font-family="var(--font-body)" font-size="13" fill="#4a5878">Ein endloser Loop aus Lernen und Anwenden</text>
+      <!-- RIGHT — Dark Accent Box -->
+      <rect x="1140" y="320" width="560" height="200" rx="24" fill="#061026"></rect>
+      <text x="1420" y="370" text-anchor="middle" font-family="var(--font-display)" font-size="28" font-weight="500" fill="#fff" letter-spacing="-0.015em">KI erkennt Muster in Prozessdaten.</text>
+      <text x="1420" y="410" text-anchor="middle" font-family="var(--font-display)" font-size="28" font-weight="500" fill="#35d6de" letter-spacing="-0.015em">Die Transformation tragen Menschen.</text>
+      <line x1="1280" y1="440" x2="1560" y2="440" stroke="rgba(255,255,255,0.08)" stroke-width="1"></line>
+      <text x="1420" y="472" text-anchor="middle" font-family="var(--font-body)" font-size="14" fill="rgba(255,255,255,0.6)">Implementierung beginnt bei den Geschäftsprozessen</text>
+      <text x="1420" y="496" text-anchor="middle" font-family="var(--font-body)" font-size="14" fill="rgba(255,255,255,0.6)">— und gelingt nur mit den Teams, die sie leben.</text>
+      <text x="60" y="715" font-family="var(--font-body)" font-size="12" fill="#4a5878" opacity="0.5">Quelle: Judea Pearl — The Ladder of Causation (adaptiert für Operational AI & KI-Implementierung im Mittelstand)</text>
+    </svg>
+  </div>
+  <div class="slide-footer">
+    <span>Marco Grotemeyer</span>
+    <span>marcogrotemeyer@icloud.com · 0151 5340 5401</span>
+    <span>Bad Oeynhausen, NRW</span>
+  </div>
+</section>
+
+<!-- ================================ SLIDE 06 — PROJEKTE & BEWEISE ================================ -->
+<section class="slide s-layout s-projects" data-screen-label="06 Projekte">
+  <div class="fw-eyecatch">
+    <h2 style="font-weight: 600;">Das kann ich — und hier ist der Beweis</h2>
+    <p class="fw-sub">Vier Projekte, die meine KI- und Implementierungskompetenz direkt belegen</p>
+  </div>
+  <div class="proj-grid" style="height: 888px;">
+    <!-- Tile 1: Marco KI Bot -->
+    <div class="proj-tile">
+      <h3>Marco KI Bot</h3>
+      <p class="proj-desc">Passwort-geschützter KI-Chatbot auf eigener Domain — live testbar. Demo für KI-Anwendungsfälle: Wissensmanagement, Assistenz.</p>
+      <div class="proj-action">
+        <a href="https://creationu.de" target="_blank" class="proj-link">
+          Zum KI-Bot
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
+        </a>
+      </div>
+      <div class="proj-badges">
+        <span class="proj-badge">LLM-Orchestrierung</span>
+        <span class="proj-badge">Prompt Engineering</span>
+        <span class="proj-badge">KI-Implementierung</span>
+      </div>
+    </div>
+    <!-- Tile 2: Workflow Automation -->
+    <div class="proj-tile">
+      <h3>Workflow Automation</h3>
+      <p class="proj-desc">Drei produktive n8n-Workflows aus dem KI-Funnel — übertragbar auf Geschäftsprozesse. Trigger, Verarbeitung, Output.</p>
+      <div class="proj-action">
+        <div style="display:flex;flex-direction:column;gap:10px;width:100%">
+          <svg width="380" height="60" viewBox="0 0 380 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="16" width="90" height="28" rx="10" fill="#2a508d" fill-opacity="0.1" stroke="#2a508d" stroke-opacity="0.25" stroke-width="1"></rect>
+            <text x="55" y="35" text-anchor="middle" font-family="var(--font-body)" font-size="11" font-weight="600" fill="#2a508d">Trigger</text>
+            <path d="M105,30 L125,30" stroke="#35d6de" stroke-width="1.5" marker-end="url(#arrowSmall)"></path>
+            <rect x="130" y="16" width="90" height="28" rx="10" fill="#35d6de" fill-opacity="0.1" stroke="#35d6de" stroke-opacity="0.3" stroke-width="1"></rect>
+            <text x="175" y="35" text-anchor="middle" font-family="var(--font-body)" font-size="11" font-weight="600" fill="#2299c4">n8n</text>
+            <path d="M225,30 L245,30" stroke="#35d6de" stroke-width="1.5" marker-end="url(#arrowSmall)"></path>
+            <rect x="250" y="16" width="90" height="28" rx="10" fill="#2a508d" fill-opacity="0.1" stroke="#2a508d" stroke-opacity="0.25" stroke-width="1"></rect>
+            <text x="295" y="35" text-anchor="middle" font-family="var(--font-body)" font-size="11" font-weight="600" fill="#2a508d">Output</text>
+            <defs><marker id="arrowSmall" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10" fill="#35d6de"></path></marker></defs>
+          </svg>
+          <div>
+            <a href="workflows/workflow-hr-process.json" download="" class="proj-dl-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              workflow-hr-process.json
+            </a>
+            <a href="workflows/workflow-onboarding.json" download="" class="proj-dl-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              workflow-onboarding.json
+            </a>
+            <a href="workflows/workflow-compliance.json" download="" class="proj-dl-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              workflow-compliance.json
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="proj-badges">
+        <span class="proj-badge">Workflow-Automation</span>
+        <span class="proj-badge">Prozessintegration</span>
+        <span class="proj-badge">DSGVO &amp; Compliance</span>
+      </div>
+    </div>
+    <!-- Tile 3: AI Workspace -->
+    <div class="proj-tile">
+      <h3>AI Agentic Workspace</h3>
+      <p class="proj-desc">Lokales LLM-Setup mit eigenem Systemprompt, Memory-File und OpenCode-Integration — technische Tiefe für KI-Implementierung.</p>
+      <div class="proj-action">
+        <img src="Link-_odysseus-fork_.png" alt="Lokaler AI Agentic Workspace" style="width:100%;height:100%;object-fit:cover;border-radius:20px;min-height:100px">
+      </div>
+      <div class="proj-badges">
+        <span class="proj-badge">KI-Implementierung</span>
+        <span class="proj-badge">Prompt Engineering</span>
+        <span class="proj-badge">LLM-Orchestrierung</span>
+      </div>
+    </div>
+    <!-- Tile 4: Gamified Experience -->
+    <div class="proj-tile">
+      <h3>Gamified Business Experience</h3>
+      <p class="proj-desc">Open-Source-Lösung: Unternehmen machen aus Geschäftsprozessen spielbare Erlebnisse — Onboarding, Compliance, Culture.</p>
+      <div class="proj-action">
+        <a href="#" target="_blank" class="proj-link">
+          Zum Repository
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
+        </a>
+      </div>
+      <div class="proj-badges">
+        <span class="proj-badge">Change &amp; Adoption</span>
+        <span class="proj-badge">Prozessintegration</span>
+        <span class="proj-badge">Enablement</span>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Marco Grotemeyer</span>
+    <span>marcogrotemeyer@icloud.com · 0151 5340 5401</span>
+    <span>Bad Oeynhausen, NRW</span>
+  </div>
+</section>
+
+</div></div>
+
+<nav class="deck-counter" role="navigation">
+  <button type="button" id="deck-prev" aria-label="Previous">‹</button>
+  <span class="deck-count"><span id="deck-cur">01</span> <span class="total">/ <span id="deck-total">01</span></span></span>
+  <button type="button" id="deck-next" aria-label="Next">›</button>
+</nav>
+<div class="deck-hint">← / → · space</div>
+
+<script>
+(function(){
+var stage=document.getElementById('deck-stage');
+var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
+var prev=document.getElementById('deck-prev');
+var next=document.getElementById('deck-next');
+var cur=document.getElementById('deck-cur');
+var total=document.getElementById('deck-total');
+var navBtns=document.querySelectorAll('#top-nav a[data-slide]');
+var STORE='deck:idx:'+(location.pathname||'/');
+var idx=0;
+
+function fit(){
+  var sw=window.innerWidth,sh=window.innerHeight,pad=32;
+  var s=Math.min((sw-pad)/1920,(sh-pad)/1080);
+  if(!isFinite(s)||s<=0)s=1;
+  var tx=(sw-1920*s)/2,ty=(sh-1080*s)/2;
+  stage.style.transform='translate('+tx+'px,'+ty+'px) scale('+s+')';
+}
+function pad2(n){return(n<10?'0':'')+n;}
+function paint(){
+  slides.forEach(function(el,i){el.classList.toggle('active',i===idx);});
+  if(cur)cur.textContent=pad2(idx+1);
+  if(total)total.textContent=pad2(slides.length);
+  if(prev)prev.toggleAttribute('disabled',idx<=0);
+  if(next)next.toggleAttribute('disabled',idx>=slides.length-1);
+  navBtns.forEach(function(b,i){b.classList.toggle('active',i===idx);});
+}
+function go(i){
+  idx=Math.max(0,Math.min(slides.length-1,i));
+  paint();try{localStorage.setItem(STORE,String(idx));}catch(_){}
+}
+function onKey(e){
+  if(e.__odDeckKeyHandled)return;
+  var t=e.target;
+  if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.__odDeckKeyHandled=true;e.preventDefault();go(idx+1);}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.__odDeckKeyHandled=true;e.preventDefault();go(idx-1);}
+  else if(e.key==='Home'){e.__odDeckKeyHandled=true;e.preventDefault();go(0);}
+  else if(e.key==='End'){e.__odDeckKeyHandled=true;e.preventDefault();go(slides.length-1);}
+}
+window.addEventListener('keydown',onKey,true);
+document.addEventListener('keydown',onKey,true);
+if(prev)prev.addEventListener('click',function(){go(idx-1);});
+if(next)next.addEventListener('click',function(){go(idx+1);});
+navBtns.forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();go(parseInt(b.dataset.slide));});});
+document.body.setAttribute('tabindex','-1');
+document.body.style.outline='none';
+function focusDeck(){try{window.focus();document.body.focus({preventScroll:true});}catch(_){}}
+document.addEventListener('mousedown',focusDeck);
+window.addEventListener('load',focusDeck);
+try{var saved=parseInt(localStorage.getItem(STORE)||'0',10);if(!isNaN(saved)&&saved>=0&&saved<slides.length)idx=saved;}catch(_){}
+window.addEventListener('resize',fit);
+fit();paint();focusDeck();
+})();
+</script>
+
+</body></html>

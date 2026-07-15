@@ -1,0 +1,10 @@
+{
+  "name": "DSGVO Compliance Check Workflow",
+  "description": "n8n workflow for automated DSGVO compliance checks — consent verification, data retention, deletion requests.",
+  "nodes": [
+    { "type": "webhook", "name": "Data Request", "position": [250, 300] },
+    { "type": "function", "name": "Verify Identity", "position": [450, 300] },
+    { "type": "httpRequest", "name": "Data Export", "position": [650, 300] },
+    { "type": "email", "name": "Send Report", "position": [850, 300] }
+  ]
+}
