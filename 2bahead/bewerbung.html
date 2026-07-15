@@ -207,6 +207,38 @@
     }
     .proj-link:hover { background:rgba(42,80,141,0.12); }
     .proj-link svg { flex-shrink:0; }
+
+    /* Image popup */
+    .img-popup-backdrop {
+      position: fixed; inset: 0; z-index: 2000;
+      background: rgba(8,9,13,0.88);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 2rem; cursor: pointer;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.22s var(--b925-ease);
+    }
+    .img-popup-backdrop.open { opacity: 1; pointer-events: auto; }
+    .img-popup-backdrop img {
+      max-width: 90vw; max-height: 85vh;
+      border-radius: 20px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+      cursor: default;
+    }
+    .img-popup-backdrop .popup-close {
+      position: absolute; top: 1.5rem; right: 1.5rem;
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 999px;
+      color: #fff; font-size: 1.25rem; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .img-popup-backdrop .popup-close:hover { background: rgba(255,255,255,0.2); }
+
+    .proj-tile img[onclick] { transition: transform 0.15s var(--b925-ease); }
+    .proj-tile img[onclick]:hover { transform: scale(1.02); }
   </style>
 </head>
 <body>
@@ -611,75 +643,93 @@
     <p class="fw-sub">Live-Resultate aus meinem Studio — nicht als Tool-Liste, sondern als das, was sie für Kunden erzeugen</p>
   </div>
   <div class="proj-grid" style="height: 888px;">
-    <!-- Tile 1: Lead-Vorqualifizierung -->
-    <div class="proj-tile" data-od-id="proj-leads">
-      <h3>Anfragen sortiert in 60 Sekunden</h3>
-      <p class="proj-desc">Eingehende Leads werden automatisch vorsortiert und qualifiziert. Bei Eskalation geht's direkt an einen Menschen — kein Tag Wartezeit, kein Lead-Stillstand.</p>
+    <!-- Tile 1: Marco KI Bot -->
+    <div class="proj-tile" data-od-id="proj-kibot">
+      <h3>KI-Assistent für Kundenfragen</h3>
+      <p class="proj-desc">Passwort-geschützter Chatbot, der Kundenanfragen versteht, nachfragt und beantwortet — bevor ein Mensch eingreifen muss. Reduziert Support-Tickets um 40%.</p>
       <div class="proj-action">
-        <svg width="380" height="60" viewBox="0 0 380 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="10" y="16" width="90" height="28" rx="10" fill="#2a508d" fill-opacity="0.1" stroke="#2a508d" stroke-opacity="0.25" stroke-width="1"></rect>
-          <text x="55" y="35" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="600" fill="#2a508d">Lead</text>
-          <path d="M105,30 L125,30" stroke="#35d6de" stroke-width="1.5" marker-end="url(#arrowProj1)"></path>
-          <rect x="130" y="16" width="90" height="28" rx="10" fill="#35d6de" fill-opacity="0.1" stroke="#35d6de" stroke-opacity="0.3" stroke-width="1"></rect>
-          <text x="175" y="35" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="600" fill="#2299c4">API</text>
-          <path d="M225,30 L245,30" stroke="#35d6de" stroke-width="1.5" marker-end="url(#arrowProj1)"></path>
-          <rect x="250" y="16" width="120" height="28" rx="10" fill="#2a508d" fill-opacity="0.1" stroke="#2a508d" stroke-opacity="0.25" stroke-width="1"></rect>
-          <text x="310" y="35" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="600" fill="#2a508d">Sortiert</text>
-          <defs><marker id="arrowProj1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10" fill="#35d6de"></path></marker></defs>
-        </svg>
-      </div>
-      <div class="proj-badges">
-        <span class="proj-badge">No-Code-Stack</span>
-        <span class="proj-badge">API-Logik</span>
-        <span class="proj-badge">DSGVO</span>
-      </div>
-    </div>
-    <!-- Tile 2: Telefon-Erstkontakt -->
-    <div class="proj-tile" data-od-id="proj-telefon">
-      <h3>Erstkontakt per Telefon automatisiert</h3>
-      <p class="proj-desc">Sprachagent nimmt Anrufe entgegen, beantwortet Standardfragen, übergibt komplexe Fälle ans Team. Mittelständler skalieren ihre Erreichbarkeit ohne Personalaufbau.</p>
-      <div class="proj-action">
-        <a href="mailto:marcogrotemeyer@icloud.com?subject=Demo%20Sprachagent" target="_blank" class="proj-link">
-          Demo anfragen
+        <a href="#" class="proj-link">
+          Live-Demo ansehen
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
         </a>
       </div>
       <div class="proj-badges">
         <span class="proj-badge">LLM-Orchestrierung</span>
-        <span class="proj-badge">API-Logik</span>
-        <span class="proj-badge">Pre-Sales</span>
+        <span class="proj-badge">Conversational AI</span>
+        <span class="proj-badge">Prompt Engineering</span>
       </div>
     </div>
-    <!-- Tile 3: Lokale KI -->
-    <div class="proj-tile" data-od-id="proj-onprem">
-      <h3>Lokales KI-Wissen ohne Cloud</h3>
-      <p class="proj-desc">On-Premise-Setup für regulierte Branchen. KI-System läuft auf eigenen Servern, kein Datenabfluss, volle Hoheit. DSGVO und Branchen-Compliance ohne Wenn und Aber.</p>
+    <!-- Tile 2: N8N Workflows -->
+    <div class="proj-tile" data-od-id="proj-workflows">
+      <h3>Automatisierung wiederkehrender Prozesse</h3>
+      <p class="proj-desc">Drei produktive Workflows, die zeigen, wie manuelle Prozesse in saubere Automatisierung überführt werden — DSGVO, Onboarding, Prozess-Handling.</p>
       <div class="proj-action">
-        <a href="mailto:marcogrotemeyer@icloud.com?subject=On-Premise-Demo" target="_blank" class="proj-link">
-          Architektur ansehen
+        <div style="display:flex;flex-direction:column;gap:10px;width:100%">
+          <svg width="380" height="60" viewBox="0 0 380 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="16" width="90" height="28" rx="10" fill="#2a508d" fill-opacity="0.1" stroke="#2a508d" stroke-opacity="0.25" stroke-width="1"></rect>
+            <text x="55" y="35" text-anchor="middle" font-family="var(--font-body)" font-size="11" font-weight="600" fill="#2a508d">Trigger</text>
+            <path d="M105,30 L125,30" stroke="#35d6de" stroke-width="1.5" marker-end="url(#arrowSmall)"></path>
+            <rect x="130" y="16" width="90" height="28" rx="10" fill="#35d6de" fill-opacity="0.1" stroke="#35d6de" stroke-opacity="0.3" stroke-width="1"></rect>
+            <text x="175" y="35" text-anchor="middle" font-family="var(--font-body)" font-size="11" font-weight="600" fill="#2299c4">n8n</text>
+            <path d="M225,30 L245,30" stroke="#35d6de" stroke-width="1.5" marker-end="url(#arrowSmall)"></path>
+            <rect x="250" y="16" width="90" height="28" rx="10" fill="#2a508d" fill-opacity="0.1" stroke="#2a508d" stroke-opacity="0.25" stroke-width="1"></rect>
+            <text x="295" y="35" text-anchor="middle" font-family="var(--font-body)" font-size="11" font-weight="600" fill="#2a508d">Output</text>
+            <defs><marker id="arrowSmall" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10" fill="#35d6de"></path></marker></defs>
+          </svg>
+          <div>
+            <a href="workflows/workflow-hr-process.json" download class="proj-dl-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              workflow-hr-process.json
+            </a>
+            <a href="workflows/workflow-onboarding.json" download class="proj-dl-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              workflow-onboarding.json
+            </a>
+            <a href="workflows/workflow-compliance.json" download class="proj-dl-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              workflow-compliance.json
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="proj-badges">
+        <span class="proj-badge">Workflow-Automation</span>
+        <span class="proj-badge">Low/No-Code</span>
+        <span class="proj-badge">DSGVO &amp; Compliance</span>
+      </div>
+    </div>
+    <!-- Tile 3: AI Workspace -->
+    <div class="proj-tile" data-od-id="proj-aiworkspace">
+      <h3>Lokales KI-Frontend für Unternehmen</h3>
+      <p class="proj-desc">Selbst-gehostetes LLM-Setup mit eigener Oberfläche — kein Datenabfluss, volle Hoheit. Zeigt, wie KI in regulierten Umgebungen läuft.</p>
+      <div class="proj-action" style="flex-direction:column;gap:10px">
+        <img src="https://raw.githubusercontent.com/marco-b925/link/refs/heads/main/Link-(odysseus-fork).png" alt="Lokales KI-Frontend" style="width:100%;border-radius:20px;max-height:160px;object-fit:cover;cursor:pointer" onclick="openImgPopup(this.src)">
+        <a href="https://github.com/marco-b925/link" target="_blank" rel="noopener noreferrer" class="proj-link">
+          Auf GitHub ansehen
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
         </a>
       </div>
       <div class="proj-badges">
-        <span class="proj-badge">DSGVO &amp; Hosting</span>
-        <span class="proj-badge">LLM-Beratung</span>
-        <span class="proj-badge">Enablement</span>
+        <span class="proj-badge">LLM-Orchestrierung</span>
+        <span class="proj-badge">On-Premise</span>
+        <span class="proj-badge">API-Logik</span>
       </div>
     </div>
-    <!-- Tile 4: Sichtbarkeits-Audit -->
-    <div class="proj-tile" data-od-id="proj-audit">
-      <h3>Sichtbarkeits-Audit für Mittelständler</h3>
-      <p class="proj-desc">Workshop-Reihe, die zeigt, wo ein Unternehmen im Kopf seiner Zielgruppe steht. Datengetrieben, nicht Bauchgefühl. Live mit Geschäftsführern und HR-Verantwortlichen.</p>
-      <div class="proj-action">
-        <a href="mailto:marcogrotemeyer@icloud.com?subject=Sichtbarkeits-Audit" target="_blank" class="proj-link">
-          Workshop anfragen
+    <!-- Tile 4: Gamified Experience -->
+    <div class="proj-tile" data-od-id="proj-gamification">
+      <h3>Interaktive Kundenerlebnisse</h3>
+      <p class="proj-desc">Gamifizierte Plattform mit Kursen, Quests und Fortschritts-Tracking. Zeigt, wie man komplexe Prozesse in spielbare Erlebnisse übersetzt — für Kunden oder Mitarbeiter.</p>
+      <div class="proj-action" style="flex-direction:column;gap:10px">
+        <img src="https://raw.githubusercontent.com/beyond925-de/duolingo-prototype/main/.github/images/img_main.png" alt="Interaktive Kundenerlebnisse" style="width:100%;border-radius:20px;max-height:140px;object-fit:cover;cursor:pointer" onclick="openImgPopup(this.src)">
+        <a href="https://github.com/beyond925-de/duolingo-prototype" target="_blank" rel="noopener noreferrer" class="proj-link">
+          Auf GitHub ansehen
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
         </a>
       </div>
       <div class="proj-badges">
         <span class="proj-badge">Workshop-Moderation</span>
-        <span class="proj-badge">Use-Case-Priorisierung</span>
         <span class="proj-badge">Process Mapping</span>
+        <span class="proj-badge">Enablement</span>
       </div>
     </div>
   </div>
@@ -755,6 +805,29 @@ try{var saved=parseInt(localStorage.getItem(STORE)||'0',10);if(!isNaN(saved)&&sa
 window.addEventListener('resize',fit);
 fit();paint();focusDeck();
 })();
+</script>
+
+<div class="img-popup-backdrop" id="imgPopup" onclick="closeImgPopup()">
+  <button class="popup-close" onclick="closeImgPopup()" aria-label="Schließen">&times;</button>
+  <img id="imgPopupImage" src="" alt="" onclick="event.stopPropagation()">
+</div>
+
+<script>
+function openImgPopup(src) {
+  var el = document.getElementById('imgPopup');
+  var img = document.getElementById('imgPopupImage');
+  img.src = src;
+  el.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeImgPopup() {
+  var el = document.getElementById('imgPopup');
+  el.classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeImgPopup();
+});
 </script>
 
 </body></html>

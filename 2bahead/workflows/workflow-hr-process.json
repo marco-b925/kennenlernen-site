@@ -1,0 +1,10 @@
+{
+  "name": "HR Process Automation Workflow",
+  "description": "n8n workflow for automated HR process handling — applicant tracking to onboarding trigger.",
+  "nodes": [
+    { "type": "webhook", "name": "New Application", "position": [250, 300] },
+    { "type": "httpRequest", "name": "CRM Lookup", "position": [450, 300] },
+    { "type": "switch", "name": "Qualification Check", "position": [650, 300] },
+    { "type": "email", "name": "Send Confirmation", "position": [850, 300] }
+  ]
+}
