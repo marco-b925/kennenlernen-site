@@ -53,6 +53,19 @@ pre{background:color-mix(in srgb,var(--ink) 6%,transparent);border:1px solid var
 .sim-reset{font-size:0.8125rem;color:var(--subtle);cursor:pointer;margin-top:0.75rem;display:inline-block;text-decoration:underline;text-underline-offset:3px}
 .template-note{display:flex;align-items:flex-start;gap:0.75rem;padding:1rem 1.25rem;background:color-mix(in srgb,var(--navy) 5%,transparent);border:1px solid color-mix(in srgb,var(--navy) 15%,transparent);border-radius:0.75rem;margin-top:1.25rem;font-size:0.8125rem;color:var(--muted);line-height:1.5}
 .template-note strong{color:var(--navy)}
+
+.think-panel{display:none;margin-top:1rem;border:1px solid var(--border-alpha);border-radius:0.75rem;background:rgba(255,255,255,0.5);padding:0.75rem;max-height:260px;overflow-y:auto;font-size:0.8125rem}
+.think-entry{display:flex;align-items:flex-start;gap:0.5rem;padding:0.35rem 0.5rem;border-radius:0.375rem;color:var(--subtle);line-height:1.4}
+.think-entry.active{color:var(--ink);background:rgba(42,80,141,0.06)}
+.think-entry.done{color:var(--muted)}
+.think-entry .think-dot{flex-shrink:0;width:1.25rem;height:1.25rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.625rem}
+.think-entry.active .think-dot{background:var(--navy);color:#fff;animation:pulse-dot 0.8s ease-in-out infinite alternate}
+.think-entry.done .think-dot{background:var(--teal);color:#fff}
+@keyframes pulse-dot{from{opacity:0.6;transform:scale(0.9)}to{opacity:1;transform:scale(1.1)}}
+.think-entry .think-msg{flex:1}
+.think-entry .think-time{flex-shrink:0;font-size:0.6875rem;color:var(--subtle);opacity:0.6}
+.think-bar{height:2px;background:var(--border-alpha);border-radius:2px;margin:0.5rem 0.5rem 0;overflow:hidden}
+.think-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--navy),var(--teal));border-radius:2px;transition:width 0.5s ease}
 .section{margin-bottom:2rem}
 hr{border:none;border-top:1px solid var(--border-alpha);margin:2rem 0}
 .dl-btn{display:inline-block;padding:0.625rem 1.25rem;border-radius:9999px;font-family:Satoshi,sans-serif;font-size:0.85rem;font-weight:600;color:#fff;background:var(--navy);text-decoration:none;transition:background 0.2s}
@@ -80,13 +93,12 @@ hr{border:none;border-top:1px solid var(--border-alpha);margin:2rem 0}
           <input type="text" id="icp-input" placeholder="Firmenname (z.B. Siemens, BMW, Deutsche Bank...)" autocomplete="off">
           <button class="sim-btn" id="icp-btn" onclick="runICP()">ICP analysieren</button>
         </div>
-        <div class="icp-steps">
-          <div class="icp-step" id="icp-step-0"><div class="icp-icon">1</div><div>Daten recherchieren</div></div>
-          <div class="icp-step" id="icp-step-1"><div class="icp-icon">2</div><div>Anreichern</div></div>
-          <div class="icp-step" id="icp-step-2"><div class="icp-icon">3</div><div>ICP-Scoring</div></div>
-          <div class="icp-step" id="icp-step-3"><div class="icp-icon">4</div><div>Outreach generieren</div></div>
-          <div class="icp-step" id="icp-step-4"><div class="icp-icon">5</div><div>HubSpot</div></div>
+
+        <div class="think-panel" id="think-panel">
+          <div id="think-entries"></div>
+          <div class="think-bar"><div class="think-bar-fill" id="think-bar-fill"></div></div>
         </div>
+
         <div class="icp-result" id="icp-result">
           <div id="icp-result-inner"></div>
         </div>
@@ -104,45 +116,122 @@ hr{border:none;border-top:1px solid var(--border-alpha);margin:2rem 0}
 </main>
 
 <script>
+var THINK_STEPS = [
+  {msg:'Domäne suchen …'},{msg:'Website crawlen …'},{msg:'KI-Analyse …'}
+];
+
+function think(stepIdx, msg, delay) {
+  return new Promise(function(r) {
+    setTimeout(function() {
+      var entries = document.getElementById('think-entries');
+      var entry = document.createElement('div');
+      entry.className = 'think-entry active';
+      entry.id = 'think-' + stepIdx;
+      entry.innerHTML = '<div class="think-dot">⋯</div>' +
+        '<span class="think-msg">' + msg + '</span>' +
+        '<span class="think-time"></span>';
+      entries.appendChild(entry);
+      entries.parentElement.scrollTop = entries.parentElement.scrollHeight;
+      r(entry);
+    }, delay || 0);
+  });
+}
+
+function thinkDone(id, icon) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.className = 'think-entry done';
+  el.querySelector('.think-dot').textContent = icon || '✓';
+  var now = new Date();
+  el.querySelector('.think-time').textContent =
+    String(now.getHours()).padStart(2,'0') + ':' +
+    String(now.getMinutes()).padStart(2,'0') + ':' +
+    String(now.getSeconds()).padStart(2,'0');
+}
+
+function setBar(pct) {
+  document.getElementById('think-bar-fill').style.width = Math.min(pct,100) + '%';
+}
+
 async function runICP() {
   var input = document.getElementById('icp-input');
   var btn = document.getElementById('icp-btn');
   var name = input.value.trim();
   if (!name) return;
-
   btn.disabled = true;
-  btn.textContent = 'Analysiere...';
+  btn.textContent = 'Analysiere …';
   document.getElementById('icp-result').style.display = 'none';
   document.getElementById('sim-reset').style.display = 'none';
-  for (var i = 0; i < 5; i++) {
-    var el = document.getElementById('icp-step-' + i);
-    el.className = 'icp-step';
-    el.querySelector('.icp-icon').textContent = i + 1;
-  }
+  document.getElementById('think-entries').innerHTML = '';
+  document.getElementById('think-bar-fill').style.width = '0%';
+  document.getElementById('think-panel').style.display = 'block';
 
   try {
+    var t;
+
+    t = await think(0,'🔍 Suche Domäne für <strong>' + name + '</strong> …',100);
+    await sleep(500);
+    thinkDone('think-0');
+    setBar(10);
+
     var resp = await fetch('/api/icp-search', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({company: name})
     });
     var data = await resp.json();
-    animateAndShow(data);
+
+    if (data.domain) {
+      t = await think(1,'🌐 Domäne gefunden: <strong>' + data.domain + '</strong>',100);
+      await sleep(400);
+      thinkDone('think-1','✓');
+      setBar(20);
+
+      t = await think(2,'📄 Crawle Homepage …',100);
+      await sleep(700);
+      thinkDone('think-2');
+      setBar(35);
+
+      t = await think(3,'📄 Crawle Impressum / Über uns …',100);
+      await sleep(600);
+      thinkDone('think-3');
+      setBar(50);
+
+      t = await think(4,'💼 Crawle Karriereseite …',100);
+      await sleep(800);
+      thinkDone('think-4');
+      setBar(65);
+
+      t = await think(5,'👥 Crawle Team-Seite …',100);
+      await sleep(600);
+      thinkDone('think-5');
+      setBar(75);
+
+      t = await think(6,'🧠 Sende Rohdaten an KI <span style="opacity:0.5">(DeepSeek via OpenRouter)</span> …',100);
+      await sleep(1200);
+      thinkDone('think-6');
+      setBar(90);
+
+      t = await think(7,'📊 Analysiere: ICP-Score · Pain Point · Outreach …',100);
+      await sleep(1000);
+      thinkDone('think-7');
+      setBar(100);
+    }
+
+    await sleep(400);
+    showResult(data, name);
   } catch (e) {
-    animateAndShow(null, name);
+    console.error(e);
+    setBar(100);
+    thinkDone('think-0','✗');
+    showResult(null, name);
   }
 }
 
-async function animateAndShow(data, fallbackName) {
-  for (var i = 0; i < 5; i++) {
-    await sleep(600);
-    var el = document.getElementById('icp-step-' + i);
-    el.className = 'icp-step active';
-    el.querySelector('.icp-icon').textContent = '⋯';
-    await sleep(i === 2 ? 800 : 500);
-    el.className = 'icp-step done';
-    el.querySelector('.icp-icon').textContent = '✓';
-  }
+function showResult(data, fallbackName) {
+  document.getElementById('think-panel').style.display = 'none';
+  document.getElementById('icp-btn').disabled = false;
+  document.getElementById('icp-btn').textContent = 'ICP analysieren';
 
   var resultEl = document.getElementById('icp-result');
   var inner = document.getElementById('icp-result-inner');
@@ -196,19 +285,17 @@ async function animateAndShow(data, fallbackName) {
 
   resultEl.style.display = 'block';
   document.getElementById('sim-reset').style.display = 'inline-block';
-  document.getElementById('icp-btn').disabled = false;
-  document.getElementById('icp-btn').textContent = 'ICP analysieren';
 }
 
 function resetSim() {
   document.getElementById('icp-input').value = '';
   document.getElementById('icp-result').style.display = 'none';
   document.getElementById('sim-reset').style.display = 'none';
-  for (var i = 0; i < 5; i++) {
-    var el = document.getElementById('icp-step-' + i);
-    el.className = 'icp-step';
-    el.querySelector('.icp-icon').textContent = i + 1;
-  }
+  document.getElementById('think-panel').style.display = 'none';
+  document.getElementById('think-entries').innerHTML = '';
+  document.getElementById('think-bar-fill').style.width = '0%';
+  document.getElementById('icp-btn').disabled = false;
+  document.getElementById('icp-btn').textContent = 'ICP analysieren';
 }
 
 function sleep(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
