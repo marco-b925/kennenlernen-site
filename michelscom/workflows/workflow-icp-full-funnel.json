@@ -1,0 +1,198 @@
+{
+  "name": "ICP Full-Funnel Pipeline",
+  "description": "Company name → AI research → enrichment → ICP scoring → personalized outreach → HubSpot contact + deal + email sequence. Template — individualize via AI agent before production use.",
+  "nodes": [
+    {
+      "type": "n8n-nodes-base.webhook",
+      "name": "ICP Trigger",
+      "position": [250, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "icp-analyze",
+        "responseMode": "responseNode"
+      }
+    },
+    {
+      "type": "n8n-nodes-base.httpRequest",
+      "name": "AI Research",
+      "position": [450, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "Bearer {{$env.OPENROUTER_API_KEY}}" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "model", "value": "openai/gpt-4o-mini" },
+            { "name": "messages[0].role", "value": "system" },
+            { "name": "messages[0].content", "value": "Du bist ein B2B Sales Research Analyst. Recherchiere das Unternehmen {{$json.company}} und liefere: 1) Branche 2) Mitarbeiterzahl 3) Hauptstandort 4) Aktuelle Hiring-Aktivität 5) Tech-Stack-Indikatoren. Formatiere als JSON." }
+          ]
+        }
+      }
+    },
+    {
+      "type": "n8n-nodes-base.httpRequest",
+      "name": "Data Enrichment",
+      "position": [650, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.clay.com/v1/enrich",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "Bearer {{$env.CLAY_API_KEY}}" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "company", "value": "{{$json.company}}" },
+            { "name": "enrichments", "value": ["contacts","technographics","funding","social"] }
+          ]
+        }
+      }
+    },
+    {
+      "type": "n8n-nodes-base.code",
+      "name": "ICP Scoring Engine",
+      "position": [850, 300],
+      "parameters": {
+        "jsCode": "// ICP Scoring Logic — ANPASSEN an deine Kriterien\nconst company = $input.first().json;\n\nlet score = 0;\n\n// 1) Branchen-Fit (max 30 Punkte)\nconst targetIndustries = ['Industrie','Automotive','Finanzdienstleistung','IT','Gesundheit','Logistik'];\nconst industryMatch = targetIndustries.some(i => (company.branche || '').toLowerCase().includes(i.toLowerCase()));\nscore += industryMatch ? 25 : 10;\n\n// 2) Unternehmensgröße (max 25 Punkte)\nconst size = parseInt((company.groesse || '0').replace(/[^0-9]/g, ''));\nif (size >= 50000) score += 25;\nelse if (size >= 1000) score += 20;\nelse if (size >= 100) score += 15;\nelse score += 5;\n\n// 3) Hiring-Signal (max 25 Punkte)\nconst hiringCount = parseInt((company.hiring || '0').replace(/[^0-9]/g, ''));\nif (hiringCount >= 500) score += 25;\nelse if (hiringCount >= 100) score += 18;\nelse if (hiringCount >= 10) score += 10;\nelse score += 3;\n\n// 4) Dringlichkeit (max 20 Punkte)\nconst urgency = company.dringlichkeit || '';\nif (urgency.includes('Hoch')) score += 20;\nelse if (urgency.includes('Mittel')) score += 12;\nelse score += 5;\n\nreturn { score, qualified: score >= 60, breakdown: { industryFit: industryMatch ? 25 : 10, sizeScore: size >= 1000 ? 20 : 10, hiringSignal: hiringCount >= 100 ? 18 : 5, urgencyScore: urgency.includes('Hoch') ? 20 : 10 } };"
+      }
+    },
+    {
+      "type": "n8n-nodes-base.switch",
+      "name": "Qualify Gate",
+      "position": [1050, 300],
+      "parameters": {
+        "rules": {
+          "rules": [
+            { "value1": "={{$json.score}}", "operation": "largerEqual", "value2": 60, "output": 0 }
+          ]
+        }
+      }
+    },
+    {
+      "type": "n8n-nodes-base.httpRequest",
+      "name": "AI Outreach Generator",
+      "position": [1250, 250],
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "Bearer {{$env.OPENROUTER_API_KEY}}" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "model", "value": "openai/gpt-4o-mini" },
+            { "name": "messages[0].role", "value": "system" },
+            { "name": "messages[0].content", "value": "Schreibe eine personalisierte LinkedIn-Connect-Note (max 300 Zeichen) und eine E-Mail für {{$json.entscheider}} bei {{$json.company}}. Das Unternehmen stellt aktuell {{$json.hiring}} ein. Schmerzpunkt: Fachkräftemangel im {{$json.branche}}-Bereich. Ton: professionell, neugierig, kein Pitch." }
+          ]
+        }
+      }
+    },
+    {
+      "type": "n8n-nodes-base.httpRequest",
+      "name": "HubSpot Create Contact",
+      "position": [1450, 200],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.hubapi.com/crm/v3/objects/contacts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "Bearer {{$env.HUBSPOT_API_KEY}}" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "properties.company", "value": "{{$json.company}}" },
+            { "name": "properties.email", "value": "{{$json.contact_email}}" },
+            { "name": "properties.firstname", "value": "{{$json.contact_firstname}}" },
+            { "name": "properties.lastname", "value": "{{$json.contact_lastname}}" },
+            { "name": "properties.icp_score", "value": "{{$json.score}}" }
+          ]
+        }
+      }
+    },
+    {
+      "type": "n8n-nodes-base.httpRequest",
+      "name": "HubSpot Create Deal",
+      "position": [1450, 380],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.hubapi.com/crm/v3/objects/deals",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "Bearer {{$env.HUBSPOT_API_KEY}}" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "properties.dealname", "value": "{{$json.company}} — ICP Lead" },
+            { "name": "properties.pipeline", "value": "icp_pipeline" },
+            { "name": "properties.dealstage", "value": "qualified" },
+            { "name": "properties.amount", "value": "{{$json.estimated_deal_value}}" }
+          ]
+        }
+      }
+    },
+    {
+      "type": "n8n-nodes-base.httpRequest",
+      "name": "HubSpot Email Sequence",
+      "position": [1650, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.hubapi.com/communication/v3/emails",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "Bearer {{$env.HUBSPOT_API_KEY}}" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "properties.hs_email_subject", "value": "{{$json.company}} — schneller besetzen durch KI?" },
+            { "name": "properties.hs_email_text", "value": "{{$json.outreach_email}}" }
+          ]
+        }
+      }
+    }
+  ],
+  "settings": {
+    "timezone": "Europe/Berlin",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  }
+}

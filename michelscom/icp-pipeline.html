@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>ICP Full-Funnel Pipeline — Marco Grotemeyer</title>
+<style>
+@import url("https://api.fontshare.com/v2/css?f[]=chillax@500,600&f[]=satoshi@400,500,700&display=swap");
+:root {
+  --cream:#f6f5ef;--navy:#2a508d;--teal:#35d6de;--cyan:#2299c4;--ink:#061026;
+  --muted:#4a5878;--subtle:#6b7691;--border-alpha:rgba(20,35,75,0.08);
+  --surface:rgba(255,255,255,0.75);--ease:cubic-bezier(0.23,1,0.32,1);
+  --shadow:0 4px 16px rgba(6,16,38,0.08);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Satoshi,system-ui,sans-serif;font-size:1rem;line-height:1.65;color:var(--ink);-webkit-font-smoothing:antialiased;background:var(--cream);min-height:100vh}
+.shell{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.shell::before{content:"";position:absolute;top:-8rem;right:-8rem;width:32rem;height:32rem;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--teal) 25%,transparent),transparent 70%);opacity:0.25}
+.shell::after{content:"";position:absolute;bottom:-6rem;left:-6rem;width:26rem;height:26rem;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--navy) 18%,transparent),transparent 70%);opacity:0.18}
+.page{position:relative;z-index:1}
+.container{max-width:52rem;margin:0 auto;padding:0 1.5rem}
+header{padding:4rem 0 2rem}
+.back-link{font-size:0.875rem;color:var(--navy);text-decoration:none;font-weight:500;display:inline-flex;align-items:center;gap:0.5rem;margin-bottom:1.5rem}
+.back-link:hover{text-decoration:underline}
+h1{font-family:Chillax,sans-serif;font-size:2.25rem;font-weight:600;letter-spacing:-0.025em;color:var(--ink)}
+.sub{font-size:1.0625rem;color:var(--muted);margin-top:0.75rem;max-width:40rem}
+.card{background:var(--surface);backdrop-filter:blur(12px) saturate(150%);border:1px solid var(--border-alpha);border-radius:1.5rem;box-shadow:var(--shadow);overflow:hidden;margin-bottom:2rem}
+.card-body{padding:2rem 2rem 2.5rem}
+.card h2{font-family:Chillax,sans-serif;font-size:1.375rem;font-weight:600;color:var(--ink);margin-bottom:1rem}
+pre{background:color-mix(in srgb,var(--ink) 6%,transparent);border:1px solid var(--border-alpha);border-radius:0.75rem;padding:1rem;font-size:0.8125rem;line-height:1.7;color:var(--muted);overflow-x:auto;font-family:"SF Mono","Fira Code",monospace}
+.impact-banner{display:flex;align-items:center;gap:1rem;padding:1rem 1.5rem;background:color-mix(in srgb,var(--teal) 10%,transparent);border:1px solid color-mix(in srgb,var(--teal) 18%,transparent);border-radius:1rem;margin-top:1.5rem;font-size:0.875rem;color:var(--muted)}
+.impact-banner strong{color:var(--navy)}
+.icp-sim{background:rgba(255,255,255,0.55);border:1px solid var(--border-alpha);border-radius:1rem;padding:1.5rem;margin:1.5rem 0}
+.icp-sim input{width:100%;padding:0.75rem 1rem;border:1px solid var(--border-alpha);border-radius:0.75rem;font-family:Satoshi,sans-serif;font-size:0.9375rem;color:var(--ink);background:#fff;outline:none}
+.icp-sim input:focus{border-color:var(--navy);box-shadow:0 0 0 3px color-mix(in srgb,var(--navy) 12%,transparent)}
+.icp-sim .sim-btn{padding:0.75rem 2rem;border-radius:9999px;font-family:Satoshi,sans-serif;font-size:0.9375rem;font-weight:600;color:#fff;background:var(--navy);border:none;cursor:pointer;transition:background 0.2s;white-space:nowrap}
+.icp-sim .sim-btn:hover{background:color-mix(in srgb,var(--navy) 88%,transparent)}
+.icp-sim .sim-btn:disabled{opacity:0.5;pointer-events:none}
+.icp-sim .sim-row{display:flex;gap:0.75rem;margin-bottom:1rem}
+.icp-steps{display:flex;flex-direction:column;gap:0.5rem}
+.icp-step{display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;border-radius:0.75rem;font-size:0.875rem;color:var(--subtle);transition:all 0.4s var(--ease);opacity:0.35}
+.icp-step.active{opacity:1;color:var(--ink);background:rgba(255,255,255,0.6);border:1px solid var(--border-alpha)}
+.icp-step.done{opacity:0.85;color:var(--navy)}
+.icp-step .icp-icon{flex-shrink:0;width:1.5rem;height:1.5rem;border-radius:50%;background:var(--border-alpha);display:flex;align-items:center;justify-content:center;font-size:0.6875rem}
+.icp-step.active .icp-icon{background:var(--navy);color:#fff}
+.icp-step.done .icp-icon{background:var(--teal);color:#fff}
+.icp-result{display:none;margin-top:1rem;padding:1rem;border-radius:0.75rem;font-size:0.875rem}
+.icp-result.qualified{background:color-mix(in srgb,var(--teal) 10%,transparent);border:1px solid color-mix(in srgb,var(--teal) 25%,transparent)}
+.icp-result.cold{background:color-mix(in srgb,var(--navy) 6%,transparent);border:1px solid var(--border-alpha)}
+.icp-result .score-big{font-family:Chillax,sans-serif;font-size:2rem;font-weight:600;color:var(--navy)}
+.icp-result .outreach-box{background:rgba(255,255,255,0.7);border:1px solid var(--border-alpha);border-radius:0.5rem;padding:0.75rem 1rem;margin-top:0.5rem;font-style:italic;color:var(--muted)}
+.sim-reset{font-size:0.8125rem;color:var(--subtle);cursor:pointer;margin-top:0.75rem;display:inline-block;text-decoration:underline;text-underline-offset:3px}
+.template-note{display:flex;align-items:flex-start;gap:0.75rem;padding:1rem 1.25rem;background:color-mix(in srgb,var(--navy) 5%,transparent);border:1px solid color-mix(in srgb,var(--navy) 15%,transparent);border-radius:0.75rem;margin-top:1.25rem;font-size:0.8125rem;color:var(--muted);line-height:1.5}
+.template-note strong{color:var(--navy)}
+.section{margin-bottom:2rem}
+hr{border:none;border-top:1px solid var(--border-alpha);margin:2rem 0}
+.dl-btn{display:inline-block;padding:0.625rem 1.25rem;border-radius:9999px;font-family:Satoshi,sans-serif;font-size:0.85rem;font-weight:600;color:#fff;background:var(--navy);text-decoration:none;transition:background 0.2s}
+.dl-btn:hover{background:color-mix(in srgb,var(--navy) 88%,transparent)}
+@media(max-width:640px){.card-body{padding:1.5rem}.container{padding:0 1rem}.icp-sim .sim-row{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="shell" aria-hidden="true"></div>
+<main class="page">
+<div class="container">
+  <header>
+    <a href="bewerbung.html" class="back-link">← Zurück zum Slide-Deck</a>
+    <h1>ICP Full-Funnel Pipeline</h1>
+    <p class="sub">Firmenname → KI-Recherche → ICP-Scoring → Outreach → HubSpot. Probier's aus.</p>
+  </header>
+
+  <section class="section">
+    <div class="card"><div class="card-body">
+      <h2>Live-Simulation</h2>
+      <p style="color:var(--muted);margin-bottom:1rem">Gib einen Firmennamen ein und sieh, wie die Pipeline in 5 Schritten einen ICP-Score berechnet und Outreach generiert.</p>
+
+      <div class="icp-sim" id="icp-sim">
+        <div class="sim-row">
+          <input type="text" id="icp-input" placeholder="Firmenname (z.B. Siemens, BMW, Deutsche Bank...)" autocomplete="off">
+          <button class="sim-btn" id="icp-btn" onclick="runICP()">ICP analysieren</button>
+        </div>
+        <div class="icp-steps">
+          <div class="icp-step" id="icp-step-0"><div class="icp-icon">1</div><div>Daten recherchieren</div></div>
+          <div class="icp-step" id="icp-step-1"><div class="icp-icon">2</div><div>Anreichern</div></div>
+          <div class="icp-step" id="icp-step-2"><div class="icp-icon">3</div><div>ICP-Scoring</div></div>
+          <div class="icp-step" id="icp-step-3"><div class="icp-icon">4</div><div>Outreach generieren</div></div>
+          <div class="icp-step" id="icp-step-4"><div class="icp-icon">5</div><div>HubSpot</div></div>
+        </div>
+        <div class="icp-result" id="icp-result">
+          <div id="icp-result-inner"></div>
+        </div>
+        <span class="sim-reset" id="sim-reset" onclick="resetSim()">↻ Simulation zurücksetzen</span>
+      </div>
+
+      <div class="template-note">
+        <div style="font-size:1.125rem">ℹ</div>
+        <div><strong>Kein Plug-and-Play — via AI Agent individualisieren.</strong> Diese Pipeline wird nicht als fertiges Produkt verkauft, sondern für jeden Kunden über meinen AI-Agent-Workspace auf den spezifischen ICP, die Branche und die Datenquellen zugeschnitten.</div>
+      </div>
+
+      <div style="margin-top:1.5rem">
+        <button class="dl-btn" onclick="downloadICPWorkflow()">↓ n8n Workflow-JSON herunterladen</button>
+      </div>
+    </div></div>
+  </section>
+</div>
+</main>
+
+<script>
+const stepLabels = ['Daten recherchieren', 'Anreichern', 'ICP-Scoring', 'Outreach generieren', 'HubSpot'];
+
+function getDemoData(company) {
+  var key = company.toLowerCase().trim();
+  const demo = {
+    'siemens': {name:'Siemens AG', industry:'Industrie / Automatisierung', employees:311000, revenue:'72 Mrd. €', hq:'München', jobsOpen:1250, icpScore:92, outreach:'Sehr geehrte Damen und Herren,\n\nIhre 1.250 offenen Stellen im Bereich Digital Industries zeigen einen klaren Bedarf an Recruiting-Automation. Mit unserer KI-gestützten ICP-Pipeline können wir Ihren Time-to-Hire um 40% reduzieren. Wäre ein 15-minütiger Austausch dazu sinnvoll?\n\nBeste Grüße'},
+    'bmw': {name:'BMW Group', industry:'Automotive / E-Mobilität', employees:154950, revenue:'155 Mrd. €', hq:'München', jobsOpen:870, icpScore:88, outreach:'Hallo Herr/Frau [Name],\n\nBMW sucht aktuell 870 Talente — vom Software-Engineer bis zum Batterie-Techniker. Unsere ICP-Pipeline identifiziert passende Kandidaten in unter 48 Stunden. Ich würde Ihnen gerne zeigen, wie das konkret für Ihre E-Recruiting-Strategie aussieht.'},
+    'deutsche bank': {name:'Deutsche Bank AG', industry:'Finanzdienstleistung', employees:90000, revenue:'28 Mrd. €', hq:'Frankfurt am Main', jobsOpen:2100, icpScore:85, outreach:'Sehr geehrte Damen und Herren,\n\n2.100 offene Positionen — vom Investment Banker bis zum IT-Security-Spezialisten. Unsere Pipeline segmentiert Kandidaten automatisch nach ICP-Fit und füllt Ihre Pipeline mit qualifizierten Bewerbern. Interesse an einer Demo?'},
+    'zalando': {name:'Zalando SE', industry:'E-Commerce / Fashion', employees:15000, revenue:'10,1 Mrd. €', hq:'Berlin', jobsOpen:430, icpScore:76, outreach:'Hallo Zalando-Team,\n\n430 offene Stellen im Tech- und Logistik-Bereich. Unser ICP-Funnel kann Ihren Recruiting-Prozess vom ersten Touchpoint bis zum HubSpot-Deal automatisieren. Lassen Sie uns in 20 Minuten besprechen, wie das für Zalando aussehen könnte.'},
+    'bosch': {name:'Robert Bosch GmbH', industry:'Technologie / Zulieferer', employees:427600, revenue:'91,6 Mrd. €', hq:'Gerlingen', jobsOpen:1800, icpScore:91, outreach:'Sehr geehrte Damen und Herren,\n\nBosch sucht 1.800 Talente weltweit — von KI-Engineers bis zu Produktionsleitern. Mit unserem ICP-gesteuerten Funnel bringen wir Ihre Recruiting-Kosten bei gleichzeitig höherer Kandidaten-Qualität um 35% runter. Ich würde gerne die Zahlen dahinter zeigen.'},
+    'sap': {name:'SAP SE', industry:'Software / Cloud', employees:107415, revenue:'31,2 Mrd. €', hq:'Walldorf', jobsOpen:3200, icpScore:95, outreach:'Hallo SAP-Team,\n\n3.200 offene Stellen — SAP ist der größte Tech-Recruiter im DACH-Raum. Eine ICP-gestützte Kandidaten-Identifikation kann Ihren bestehenden Funnel um den Faktor 3 skalieren, ohne Qualitätsverlust. 15 Minuten für eine Live-Demo?'}
+  };
+  return demo[key] || null;
+}
+
+async function runICP() {
+  var input = document.getElementById('icp-input');
+  var btn = document.getElementById('icp-btn');
+  var name = input.value.trim();
+  if (!name) return;
+
+  btn.disabled = true;
+  btn.textContent = 'Analysiere...';
+  document.getElementById('icp-result').style.display = 'none';
+  document.getElementById('sim-reset').style.display = 'none';
+  for (var i = 0; i < 5; i++) {
+    document.getElementById('icp-step-' + i).className = 'icp-step';
+  }
+
+  var demo = getDemoData(name);
+  var useDemo = !demo;
+
+  if (useDemo) {
+    try {
+      var resp = await fetch('https://api.michelscom.de/api/icp-search', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({company: name})
+      });
+      if (resp.ok) {
+        demo = await resp.json();
+      }
+    } catch (e) {}
+  }
+
+  if (!demo) {
+    demo = {name:name, industry:'Nicht klassifiziert', employees:'—', revenue:'—', hq:'—', jobsOpen:'—', icpScore:Math.floor(Math.random()*40)+20, outreach:'(Demo-Daten — kein Live-Backend verbunden)\n\nKeine Daten zu "'+name+'" gefunden. Versuche: Siemens, BMW, Deutsche Bank, Zalando, Bosch, SAP'};
+  }
+
+  for (var i = 0; i < 5; i++) {
+    await sleep(800);
+    document.getElementById('icp-step-' + i).className = 'icp-step active';
+    document.getElementById('icp-step-' + i).querySelector('.icp-icon').textContent = '⋯';
+    await sleep(i === 2 ? 1200 : 700);
+    document.getElementById('icp-step-' + i).className = 'icp-step done';
+    document.getElementById('icp-step-' + i).querySelector('.icp-icon').textContent = '✓';
+  }
+
+  var resultEl = document.getElementById('icp-result');
+  var inner = document.getElementById('icp-result-inner');
+  var qualified = demo.icpScore >= 75;
+  resultEl.className = 'icp-result ' + (qualified ? 'qualified' : 'cold');
+
+  inner.innerHTML =
+    '<div style="margin-bottom:0.75rem"><strong>' + demo.name + '</strong> · ' + demo.industry + ' · ' + demo.hq + '</div>' +
+    '<div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem">' +
+    '<span class="score-big">' + demo.icpScore + '/100</span>' +
+    '<span style="font-size:0.8125rem;color:var(--subtle)">' + (qualified ? 'Qualifizierter ICP-Lead' : 'Niedriger ICP-Fit') + '</span>' +
+    '</div>' +
+    '<div style="display:flex;gap:1.5rem;font-size:0.8125rem;color:var(--subtle);margin-bottom:0.75rem">' +
+    '<span>👥 ' + demo.employees + '</span><span>💰 ' + demo.revenue + '</span><span>📋 ' + demo.jobsOpen + ' offen</span>' +
+    '</div>' +
+    '<div class="outreach-box">' + demo.outreach.replace(/\n/g,'<br>') + '</div>';
+
+  resultEl.style.display = 'block';
+  document.getElementById('sim-reset').style.display = 'inline-block';
+  btn.disabled = false;
+  btn.textContent = 'ICP analysieren';
+}
+
+function resetSim() {
+  document.getElementById('icp-input').value = '';
+  document.getElementById('icp-result').style.display = 'none';
+  document.getElementById('sim-reset').style.display = 'none';
+  for (var i = 0; i < 5; i++) {
+    document.getElementById('icp-step-' + i).className = 'icp-step';
+    document.getElementById('icp-step-' + i).querySelector('.icp-icon').textContent = i + 1;
+  }
+}
+
+function sleep(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
+
+function downloadICPWorkflow() {
+  var json = {
+    name: 'ICP Full-Funnel Pipeline',
+    nodes: [
+      {name:'Webhook',type:'n8n-nodes-base.webhook',position:[250,300],parameters:{httpMethod:'POST',path:'icp-search',responseMode:'responseNode'}},
+      {name:'Company Research',type:'n8n-nodes-base.httpRequest',position:[450,300],parameters:{method:'POST',url:'={{$json.company}}',options:{}},
+        notes:'Perplexity / Firecrawl API — Firmendaten extrahieren'},
+      {name:'Enrich (Apollo/Clearbit)',type:'n8n-nodes-base.httpRequest',position:[650,300],parameters:{method:'POST'},
+        notes:'Anreicherung mit Mitarbeiterzahl, Revenue, Tech-Stack, Hiring-Signalen'},
+      {name:'ICP Scoring',type:'n8n-nodes-base.code',position:[850,300],parameters:{jsCode:'// ICP-Scoring-Logik\n// Faktoren: Größe, Branche, offene Stellen, Tech-Stack, Funding\nconst score = Math.min(100, (employees * 0.3 + jobsOpen * 0.4 + techScore * 0.3));\nreturn [{json: {score, icpFit: score >= 75 ? "qualified" : "cold"}}];'},
+        notes:'Scoring-Logik (anpassbar pro Kunde)'},
+      {name:'Outreach Generator',type:'n8n-nodes-base.openAi',position:[1050,300],parameters:{},
+        notes:'Claude/GPT generiert personalisierten Outreach-Text'},
+      {name:'HubSpot',type:'n8n-nodes-base.hubspot',position:[1250,300],parameters:{resource:'contact',operation:'create'},
+        notes:'Lead in HubSpot anlegen (Company + Contact + Deal)'},
+      {name:'Respond',type:'n8n-nodes-base.respondToWebhook',position:[1450,300],parameters:{respondWith:'json'}}
+    ],
+    connections:{
+      'Webhook':{main:[[{node:'Company Research',type:'main',index:0}]]},
+      'Company Research':{main:[[{node:'Enrich (Apollo/Clearbit)',type:'main',index:0}]]},
+      'Enrich (Apollo/Clearbit)':{main:[[{node:'ICP Scoring',type:'main',index:0}]]},
+      'ICP Scoring':{main:[[{node:'Outreach Generator',type:'main',index:0}]]},
+      'Outreach Generator':{main:[[{node:'HubSpot',type:'main',index:0}]]},
+      'HubSpot':{main:[[{node:'Respond',type:'main',index:0}]]}
+    }
+  };
+  var blob = new Blob([JSON.stringify(json, null, 2)], {type:'application/json'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'workflow-icp-full-funnel.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

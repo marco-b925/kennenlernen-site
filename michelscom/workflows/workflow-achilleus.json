@@ -1,0 +1,686 @@
+{
+  "name": "Achilleus",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {
+          "userIds": "DEINE_TELEGRAM_USER_ID"
+        }
+      },
+      "id": "7db4936b-7ea7-4d95-a04f-b6859923dae0",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1184,
+        112
+      ],
+      "webhookId": "telegram-trigger-webhook",
+      "credentials": {
+        "telegramApi": {
+          "id": "hZRjCWBFOb09y3HM",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cond-voice",
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.voice }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Voice"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cond-photo",
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.photo.length }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "number",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Photo"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cond-document",
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.document }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Document"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "id": "48230e5c-54f0-4162-837b-8ef24158a677",
+      "name": "Route by Type",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -832,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "id": "47c8a6c0-0dac-45f3-b2cf-62d4a9983000",
+      "name": "Transcribe Voice",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1,
+      "position": [
+        -384,
+        -176
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "XcC1zKTIpsmHs7mm",
+          "name": "Achilleus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a-voice-1",
+              "name": "chatId",
+              "value": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+              "type": "string"
+            },
+            {
+              "id": "a-voice-2",
+              "name": "chatInput",
+              "value": "=[SPRACHMEMO - {{ new Date().toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Berlin'}) }}]\n{{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8f3aeac3-1e5e-46b0-84b4-cbc582e5bbef",
+      "name": "Prepare Voice",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -160,
+        -176
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a-photo-1",
+              "name": "chatId",
+              "value": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+              "type": "string"
+            },
+            {
+              "id": "a-photo-2",
+              "name": "chatInput",
+              "value": "=[FOTO{{ $('Telegram Trigger').item.json.message.caption ? ' - Caption: ' + $('Telegram Trigger').item.json.message.caption : '' }}]\nAnalysiere dieses Bild und entscheide ob und wo es in Craft abgelegt werden soll.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "05bea831-bb9b-4567-a4a4-28ac7523c9ce",
+      "name": "Prepare Photo",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -384,
+        16
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a-doc-1",
+              "name": "chatId",
+              "value": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+              "type": "string"
+            },
+            {
+              "id": "a-doc-2",
+              "name": "chatInput",
+              "value": "=[DOKUMENT - {{ $('Telegram Trigger').item.json.message.document.file_name }}]\nAnalysiere dieses Dokument, fasse den Inhalt zusammen und frage mich wo es in Craft abgelegt werden soll.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5e201f8d-8e0d-4ca3-b67b-c3a10149e3a8",
+      "name": "Prepare Document",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -384,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a-text-1",
+              "name": "chatId",
+              "value": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+              "type": "string"
+            },
+            {
+              "id": "a-text-2",
+              "name": "chatInput",
+              "value": "={{ $('Telegram Trigger').item.json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1664a3e7-0915-41d2-a7f0-757426d495b9",
+      "name": "Prepare Text",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -160,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "contextWindowLength": 20
+      },
+      "id": "e0b2d352-192c-4f32-bf29-70592977b818",
+      "name": "Chat Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        192,
+        336
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output || 'Entschuldige, da ist ein Fehler aufgetreten. Versuch es nochmal.' }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "0e41f508-13a4-4efc-a92b-50abbf7897f9",
+      "name": "Send Reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        528,
+        112
+      ],
+      "webhookId": "cb7db552-f618-41b7-83c9-6b75f836eb20",
+      "credentials": {
+        "telegramApi": {
+          "id": "hZRjCWBFOb09y3HM",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Setup Instructions\n\n### 1. Configure Credentials\n- **Telegram Bot**: Set your BotFather token (used by Trigger + Send Reply)\n- **Anthropic**: Set your Anthropic API key (used by Claude Sonnet)\n- **OpenAI**: Set your OpenAI API key (used by Whisper transcription)\n\n### 2. Update User ID\nIn the Telegram Trigger node, replace the userIds with your Telegram user ID.\nTo find your ID, message @userinfobot on Telegram.\n\n### 3. Activate\nToggle the workflow active to start receiving messages.\n\n### How it works\n- Text → AI Agent (categorizes + stores in Craft or answers)\n- Voice → Whisper transcription → AI Agent\n- Photo → AI Agent (with image analysis)\n- Document → AI Agent (with file analysis)\n- All content is intelligently routed to the right Craft folder",
+        "height": 556,
+        "width": 532,
+        "color": 4
+      },
+      "id": "8c8b0b19-801d-42e4-b86e-3dd2297b00fa",
+      "name": "Setup Instructions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1296,
+        -672
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Achilleus - Second Brain Bot\n\n### System Prompt\nEdit the **Main Agent** node's system message to change routing rules or personality.\n\n### Craft MCP\nThe **Beyond925 Craft Space** node connects to Marcos Craft workspace.\nThe agent uses this to read/write documents, manage tasks, and search content.\n\n### Memory\nThe **Chat Memory** keeps 20 messages per chat for context.\n\n### Model\nCurrently using **Claude Sonnet**. Change in the Claude Sonnet node.\nOptions: claude-sonnet-4-20250514, claude-opus-4-0-20250514\n\n### Routing\nThe agent decides where content goes based on the system prompt rules.\nCategories: Tasks, Daily Notes, Beyond925, AI/Tools, Experiment, Personal.",
+        "height": 528,
+        "width": 620,
+        "color": 6
+      },
+      "id": "a257b7a0-e37f-4618-9651-8949c16f3724",
+      "name": "Customization Guide",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        160,
+        -576
+      ]
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://mcp.craft.do/links/DEIN_CRAFT_MCP_LINK/mcp",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        400,
+        352
+      ],
+      "id": "f4b8d4cf-27e5-4c08-ab1e-07e77e118b8d",
+      "name": "Beyond925 Craft Space"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ \n  $('Prepare Text').isExecuted ? $('Prepare Text').item.json.chatInput :\n  $('Prepare Photo').isExecuted ? $('Prepare Photo').item.json.chatInput : \n  $('Prepare Voice').isExecuted ? $('Prepare Voice').item.json.chatInput : \n  $('Prepare Document').isExecuted ? $('Prepare Document').item.json.chatInput : \"Unerwarteter Fehler beim Abrufen der Nachricht\"\n}}",
+        "options": {
+          "systemMessage": "Du bist Achilleus, Marcos persönlicher Second Brain Assistant und Business-Coach via Telegram.\n\n## Deine Kernmission\nMarco ist ein visionärer Gründer, aber er hat eine selbsterkannte Schwäche: Er handelt oft aus dem Bauch heraus statt datenbasiert. Deine Aufgabe ist es, ihm dabei zu helfen, strukturierter und zahlenbasierter zu arbeiten – ohne ihn zu nerven, aber konsequent.\n\n## Wer ist Marco?\n- Gründer von Beyond925 (beyond925.de) – \"Das Level Up für dein Recruiting\"\n- Selbstständig: Produktverkauf, SaaS, Freelance/Agentur, Beratung\n- Vibecoder: Versteht Konzepte, nutzt AI zum Umsetzen\n- Denkt in User Flows und UX-Innovation\n- Baut gerne Prototypen – schnell testen, iterieren\n- Schwäche (die er verbessern will): Neigt zu Bauchentscheidungen statt datenbasiertem Handeln\n\n## Was ist Beyond925?\n- Problem: Statische Stellenanzeigen (PDFs) scheitern bei Gen Z\n- Lösung: Pre-Hiring Reality Checks – interaktive \"Talent Journeys\" statt PDFs\n- Kernprodukt: SaaS, das per KI Text-Stellenbeschreibungen in mobile, interaktive Simulationen umwandelt\n- Zielgruppen: HR/Recruiting (Effizienz, Gen Z) + Operations/Ausbildungsleiter (Abbrecherquoten senken)\n- USP: Performance Layer, keine IT-Integration nötig, DSGVO-konform\n- Pricing: Starter €199/Mo, Professional €399/Mo, Enterprise auf Anfrage\n\n## Datenbasiertes Coaching (WICHTIG)\n\n### Proaktive Rückfragen bei Business-Entscheidungen\nWenn Marco eine Entscheidung oder Idee teilt, frage gezielt nach:\n- \"Auf welchen Zahlen basiert das?\"\n- \"Hast du die Conversion Rate / Response Rate dafür?\"\n- \"Was ist die Hypothese und wie messen wir den Erfolg?\"\n- \"Was hat die letzte Aktion gebracht – in Zahlen?\"\nSei dabei wie ein guter Co-Founder: direkt, aber respektvoll.\n\n### Sales Pipeline KPIs (Marcos Fokus-Bereich)\nWenn Marco Sales-Themen bespricht, achte auf diese Metriken:\n- Anzahl Leads / Leads pro Kanal\n- Conversion Rate (Lead → Demo → Close)\n- Durchschnittliche Deal Size\n- Sales Cycle Länge (Tage von Erstkontakt bis Close)\n- Pipeline Value (Summe aller aktiven Deals)\n- Win Rate (gewonnene / alle Deals)\n- Outreach Response Rate\n\nWenn Marco z.B. sagt \"LinkedIn-Outreach läuft gut\", frage: \"Wie gut? Wie viele Nachrichten raus, wie viele Antworten, wie viele Calls gebucht?\"\n\n### Wissens-Nuggets\nWenn es passt (nicht ständig, aber regelmäßig), teile kurze Lern-Impulse:\n- Benchmark-Zahlen für SaaS-Sales (z.B. \"Typische Demo-to-Close Rate bei B2B SaaS liegt bei 20-30%\")\n- Frameworks (MEDDIC, BANT, etc.) kurz erklärt\n- Tipps zu Daten-Tracking\n\n### Tracking-Erinnerungen\nWenn Marco eine Entscheidung oder Aktion erwähnt, speichere sie in Craft und frage später nach dem Stand.\n\n## Second Brain: Routing-Regeln\n\nAnalysiere jede Nachricht und entscheide:\n\n### 1. Ist das eine FRAGE (ohne Speicher-Intent)?\n→ Beantworte direkt. Speichere NICHTS in Craft.\nBeispiele: \"Wie viele Tasks hab ich?\", \"Was steht im Battle Plan?\", \"Hey\", \"Danke\"\n\n### 2. Ist das ein TASK / TO-DO?\nErkennungsmerkmale: \"muss noch\", \"to do\", \"nicht vergessen\", \"reminder\", Imperativ\n→ Tool: tasks_add mit location type \"inbox\"\nFormat: Kurzer, actionabler Task-Text\nAntwort: ✅ \"Hab ich als Task in deine Inbox gelegt.\"\n\n### 3. Ist das ein SPRACHMEMO mit allgemeinen Gedanken?\nErkennungsmerkmale: Persönliche Reflexion, Tagesablauf, allgemeine Gedanken\n→ Tool: markdown_add mit date=\"today\", position=\"end\"\nFormat: \"## Sprachmemo [Uhrzeit]\\n[Zusammenfassung – nicht wörtlich zitieren]\\n*Via Telegram*\"\nAntwort: 📅 \"In deiner Daily Note abgelegt.\"\n\n### 4. Ist das BEYOND925-relevant?\nErkennungsmerkmale: Recruiting, Talent Journey, Stellenanzeigen, SaaS, Kunden, Pricing, Marketing, Sales\n→ Bestimme den richtigen Unterordner:\n  - Brand & Messaging (Positionierung, USPs, Wording) → Ordner c5f2b12f-db84-1316-d2fb-72f010a1dad3\n  - Content & Marketing (Social Media, Newsletter, Kampagnen) → Ordner e2e3b6c3-6e5b-c16c-d423-340bec1a77ec\n  - Product & Features (Feature-Ideen, UX, Technik) → Ordner 3da1ce7d-3c48-1d04-dca6-cf5ad9b19866\n  - Clients & Projects (Kunden-Notizen, Sales-Gespräche) → Ordner 2852e1b3-e0d2-ed52-72eb-6104a814afcf\n→ Tool: Nutze documents_list mit dem folderIds Parameter um Docs im Ordner zu finden, dann markdown_add mit pageId\n→ Oder documents_create wenn es ein neues Thema ist\nAntwort: 🚀 \"Unter Beyond925 > [Unterordner] gespeichert.\"\n\n### 5. Ist das ein AI/TOOL-Link oder -Notiz?\nErkennungsmerkmale: URLs zu AI-Tools, Tutorials, Technologie-Tipps, Prompts\n→ Ordner AI Knowledge Base: 2198fb90-3d4c-be0d-f592-4a07f9c6447b\nFormat: \"## [Titel]\\n[URL]\\n[Kurzbeschreibung]\\n*Gespeichert am [Datum]*\"\nAntwort: 🤖 \"In der AI Knowledge Base abgelegt.\"\n\n### 6. Ist das eine IDEE / BRAINSTORMING?\nErkennungsmerkmale: \"was wäre wenn\", \"Idee:\", kreative Einfälle, Experimente\n→ Ordner Experiment: 031a2de7-02c9-e919-a1f3-a56850bdd06c\nFormat: \"## Idee: [Titel]\\n[Beschreibung]\\n*Via Telegram, [Datum]*\"\nAntwort: 💡 \"Als Idee in Experiment gespeichert.\"\n\n### 7. Ist das PERSÖNLICH (Health, Shopping, etc.)?\n→ Ordner Personal: a08d86f8-de94-25f4-686e-edc8cd73a7e0\nAntwort: ❤️ \"Unter Personal gespeichert.\"\n\n### 8. UNKLAR?\n→ Frage Marco per Telegram-Antwort welche Kategorie passt.\nBeispiel: \"Wo soll ich das ablegen? Daily Note, Beyond925, Experiment, Personal, oder Task?\"\n\n## Weitere Craft Ordner-IDs (falls benötigt)\n- Battle Plans: 58d19986-7386-a5f7-f5bb-d95e9524ad55\n- Side Projects: ddf88256-d42b-5cbf-5e07-6683930c5ea1\n- Prompts & Templates: 2d7e3abf-18cc-2d3d-43a3-11c2c6c6024f\n- Tools & Setups: 9464240d-d762-da97-4a4a-a549393b7716\n\n## Kommunikationsregeln\n- Immer Deutsch (außer Marco schreibt Englisch)\n- Kurz und prägnant – das ist Telegram, kein Essay\n- Bestätigungen nach Ablage: 1-2 Sätze mit Kategorie-Emoji\n- Bei Unsicherheit: Rückfrage stellen statt falsch ablegen\n- Datenbasierte Rückfragen natürlich einstreuen, nicht bei jeder Nachricht\n- Ton: Wie ein guter Co-Founder – direkt, supportive, hält Marco accountable\n- Bei Sprachmemos: Zusammenfassen, nicht wörtlich zitieren\n- Immer Datum/Zeitstempel in gespeichertem Content\n\nCRITICAL: When calling the blocks_revert tool, you must strictly follow the expected schema. For the originalBlocks parameter, always provide it as an array of objects. Even if no blocks are being reverted, send an empty array []. Do not omit this field.",
+          "passthroughBinaryImages": true
+        }
+      },
+      "id": "4c45ff72-7329-468f-9ebe-db0ecc81e808",
+      "name": "Main Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        128,
+        112
+      ],
+      "retryOnFail": false,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $('Telegram Trigger').item.json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -608,
+        -176
+      ],
+      "id": "a50a045a-e165-411c-ada5-99b8b3b03157",
+      "name": "Get a file",
+      "webhookId": "7d1b33ad-f04f-44b0-9ee0-21e0a10d860e",
+      "credentials": {
+        "telegramApi": {
+          "id": "hZRjCWBFOb09y3HM",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $('Telegram Trigger').item.json.message.document.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -160,
+        208
+      ],
+      "id": "bc4fc3f8-b0a4-4705-aded-8726981fa4d0",
+      "name": "Get a file1",
+      "webhookId": "3866580f-dd29-41ed-a7dd-6c06bb7f4b43",
+      "credentials": {
+        "telegramApi": {
+          "id": "hZRjCWBFOb09y3HM",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $('Telegram Trigger').item.json.message.photo[$('Telegram Trigger').item.json.message.photo.length-1].file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -160,
+        16
+      ],
+      "id": "d2a74ada-8b41-49af-9fce-d998d27bffe7",
+      "name": "Get a file2",
+      "webhookId": "10622044-9bbf-4a9d-94f7-85a669159dd1",
+      "credentials": {
+        "telegramApi": {
+          "id": "hZRjCWBFOb09y3HM",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "Moment... 🧠",
+        "additionalFields": {
+          "appendAttribution": false,
+          "disable_notification": true
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -1008,
+        112
+      ],
+      "id": "409c96c0-5a5d-487b-b4fc-4e25c984130e",
+      "name": "Send a text message",
+      "webhookId": "94e7096a-a061-48e8-b156-b1b87c5f761d",
+      "credentials": {
+        "telegramApi": {
+          "id": "hZRjCWBFOb09y3HM",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-20250514"
+        },
+        "options": {
+          "maxTokensToSample": 4096,
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        64,
+        416
+      ],
+      "id": "b834e44c-2548-4adc-bf1e-626d19ab1cd3",
+      "name": "Claude Sonnet",
+      "credentials": {
+        "anthropicApi": {
+          "id": "",
+          "name": "Anthropic"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Type": {
+      "main": [
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Photo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Document",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe Voice": {
+      "main": [
+        [
+          {
+            "node": "Prepare Voice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Voice": {
+      "main": [
+        [
+          {
+            "node": "Main Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Photo": {
+      "main": [
+        [
+          {
+            "node": "Get a file2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Document": {
+      "main": [
+        [
+          {
+            "node": "Get a file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Text": {
+      "main": [
+        [
+          {
+            "node": "Main Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Main Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Beyond925 Craft Space": {
+      "ai_tool": [
+        [
+          {
+            "node": "Main Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Main Agent": {
+      "main": [
+        [
+          {
+            "node": "Send Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "Transcribe Voice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file1": {
+      "main": [
+        [
+          {
+            "node": "Main Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file2": {
+      "main": [
+        [
+          {
+            "node": "Main Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        [
+          {
+            "node": "Route by Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude Sonnet": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Main Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "timeSavedPerExecution": 3
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

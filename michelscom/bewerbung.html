@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Bewerbungsmaterial — nicht zur Weiterverwendung oder zum Download bestimmt. Bei Interesse: marco@marcogrotemeyer.de -->
+<title>Marco Grotemeyer — AI Coding & Automation Expert</title>
+<style>
+@import url("https://api.fontshare.com/v2/css?f[]=chillax@500,600&f[]=satoshi@400,500,700&display=swap");
+:root {
+  --cream: #f6f5ef; --surface: #ffffff; --ink: #061026; --muted: #4a5878;
+  --border: #dbdbdb; --teal: #35d6de; --cyan: #2299c4; --navy: #2a508d;
+  --surface-glass: rgba(255,255,255,0.78);
+  --border-alpha: rgba(20,35,75,0.08);
+  --shadow: 0 2px 24px rgba(6,16,38,0.06);
+  --font-display: 'Chillax','Satoshi',system-ui,sans-serif;
+  --font-body: 'Satoshi',system-ui,-apple-system,sans-serif;
+  --font-mono: ui-monospace,'SFMono-Regular',Menlo,Monaco,Consolas,monospace;
+  --shell: #08090d;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--shell); font: 18px/1.5 var(--font-body); -webkit-font-smoothing: antialiased; }
+.deck-shell { position: fixed; inset: 0; overflow: hidden; }
+.deck-stage { width: 1920px; height: 1080px; background: var(--cream); position: relative; transform-origin: top left; box-shadow: 0 30px 80px rgba(0,0,0,0.35); }
+.slide { position: absolute; inset: 0; overflow: hidden; }
+.slide:not(.active) { display: none !important; }
+.slide.active { display: flex; flex-direction: column; }
+
+.deck-counter { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 4px; background: rgba(10,14,26,0.92); backdrop-filter: blur(10px); padding: 6px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.08); color: #fff; font: 12px/1 var(--font-mono); letter-spacing: 0.18em; z-index: 1000; }
+.deck-counter button { width: 36px; height: 36px; background: transparent; color: #fff; border: 0; border-radius: 50%; font-size: 18px; cursor: pointer; display: grid; place-items: center; }
+.deck-counter button:hover { background: rgba(255,255,255,0.12); }
+.deck-counter button[disabled] { opacity: 0.3; cursor: default; }
+.deck-counter .deck-count { padding: 0 14px; letter-spacing: 0.22em; }
+.deck-counter .deck-count .total { color: rgba(255,255,255,0.5); }
+
+.nav-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 500; display: flex; justify-content: center; gap: 32px; padding: 14px 40px; background: rgba(8,9,13,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.08); }
+.nav-bar button { font-family: var(--font-body); font-size: 14px; font-weight: 500; letter-spacing: 0.04em; color: rgba(255,255,255,0.55); background: none; border: none; cursor: pointer; padding: 6px 16px; border-radius: 999px; display: flex; align-items: center; gap: 8px; }
+.nav-num { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: rgba(255,255,255,0.3); }
+.nav-bar button:hover { color: rgba(255,255,255,0.85); }
+.nav-bar button:hover .nav-num { color: rgba(255,255,255,0.5); }
+.nav-bar button.active { background: var(--teal); color: #fff; font-weight: 600; }
+.nav-bar button.active .nav-num { color: rgba(255,255,255,0.8); }
+
+.s-layout { display: flex; flex-direction: column; width: 100%; height: 100%; }
+.s-title { justify-content: center; align-items: center; padding: 80px 160px 100px; }
+.s-cards { padding: 52px 100px 60px; }
+.s-letter { padding: 48px 120px 56px; }
+.s-projects { padding: 48px 100px 56px; }
+
+.eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--teal); background: var(--surface-glass); padding: 8px 20px 8px 14px; border-radius: 999px; border: 1px solid var(--border-alpha); }
+.eyebrow::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: radial-gradient(circle, #fff 20%, var(--teal) 60%, var(--navy) 100%); }
+
+h1 { font-family: var(--font-display); font-weight: 600; }
+h2 { font-family: var(--font-display); font-weight: 500; }
+h3 { font-family: var(--font-body); font-weight: 600; }
+
+.photo-frame { width: 320px; height: 320px; border-radius: 40px; overflow: hidden; box-shadow: 0 4px 40px rgba(6,16,38,0.12); flex-shrink: 0; }
+.photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+.cta-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 600; color: #fff; background: var(--navy); padding: 14px 32px; border-radius: 14px; border: none; cursor: pointer; text-decoration: none; letter-spacing: 0.01em; }
+.cta-btn:hover { background: var(--ink); }
+
+.card { background: var(--surface-glass); border: 1px solid var(--border-alpha); border-radius: 32px; padding: 40px; overflow-y: auto; box-shadow: var(--shadow); }
+.card h2 { font-size: 26px; color: var(--ink); letter-spacing: -0.015em; margin-bottom: 20px; }
+.card p, .card li { font-size: 18px; line-height: 1.65; color: var(--muted); }
+.card ul { list-style: none; padding: 0; }
+.card ul li { padding: 4px 0 4px 16px; position: relative; }
+.card ul li::before { content: ''; position: absolute; left: 0; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--teal); }
+.card-sm { padding: 28px 24px; }
+
+.slide-footer { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px 140px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-alpha); background: rgba(246,245,239,0.92); backdrop-filter: blur(12px); }
+.slide-footer span { font-size: 15px; color: var(--muted); letter-spacing: 0.02em; }
+
+.fw-eyecatch { text-align: center; margin-bottom: 24px; flex-shrink: 0; }
+.fw-eyecatch h2 { font-size: 32px; color: var(--ink); letter-spacing: -0.02em; margin-bottom: 6px; }
+.fw-eyecatch .fw-sub { font-size: 16px; color: var(--muted); font-weight: 400; }
+
+.img-popup-backdrop { position: fixed; inset: 0; z-index: 2000; background: rgba(8,9,13,0.88); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; padding: 2rem; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity 0.22s; }
+    .img-popup-backdrop.open { opacity: 1; pointer-events: auto; }
+    .img-popup-backdrop svg { max-width: 85vw; max-height: 80vh; border-radius: 20px; box-shadow: 0 30px 80px rgba(0,0,0,0.45); background: var(--cream); }
+    .img-popup-backdrop .popup-close { position: absolute; top: 1.5rem; right: 1.5rem; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); border-radius: 999px; color: #fff; font-size: 1.25rem; cursor: pointer; transition: background 0.15s; }
+    .img-popup-backdrop .popup-close:hover { background: rgba(255,255,255,0.2); }
+
+.proj-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 20px; flex: 1; min-height: 0; }
+.proj-tile { background: var(--surface-glass); border: 1px solid var(--border-alpha); border-radius: 28px; padding: 20px 24px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 10px; text-decoration: none; color: inherit; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; overflow: hidden; }
+.proj-tile:hover { transform: translateY(-2px); box-shadow: 0 8px 48px rgba(6,16,38,0.12); }
+.proj-tile h3 { font-family: var(--font-display); font-size: 19px; font-weight: 500; color: var(--ink); letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px; }
+.proj-tile .proj-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+.proj-tile .proj-desc { font-size: 15px; color: var(--muted); line-height: 1.5; }
+.proj-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border-alpha); }
+.proj-badge { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; letter-spacing: 0.03em; background: rgba(53,214,222,0.08); color: var(--navy); }
+
+.proj-img { width: 100%; height: 170px; border-radius: 14px; overflow: hidden; background: rgba(42,80,141,0.04); flex-shrink: 0; cursor: pointer; position: relative; }
+.proj-img img, .proj-img svg { width: 100%; height: 100%; object-fit: cover; display: block; }
+.proj-img .zoom-hint { position: absolute; top: 10px; right: 10px; background: rgba(6,16,38,0.6); color: #fff; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 600; letter-spacing: 0.04em; opacity: 0; transition: opacity 0.2s; }
+.proj-tile:hover .zoom-hint { opacity: 1; }
+.proj-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: var(--navy); text-decoration: none; padding: 10px 20px; border-radius: 12px; background: rgba(42,80,141,0.08); margin-top: auto; transition: background 0.15s; }
+.proj-btn:hover { background: rgba(42,80,141,0.15); }
+.proj-btn svg { flex-shrink: 0; }
+
+.process-steps { display: flex; gap: 32px; flex: 1; align-items: stretch; }
+.process-card { flex: 1; background: var(--surface-glass); border: 1px solid var(--border-alpha); border-radius: 32px; padding: 40px 36px; box-shadow: var(--shadow); display: flex; flex-direction: column; }
+.process-card .step-num { font-family: var(--font-display); font-size: 64px; font-weight: 600; color: var(--teal); opacity: 0.3; margin-bottom: 16px; line-height: 1; }
+.process-card h3 { font-family: var(--font-display); font-size: 22px; font-weight: 500; color: var(--ink); margin-bottom: 12px; }
+.process-card p { font-size: 16px; color: var(--muted); line-height: 1.55; }
+.process-card .step-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 16px; }
+.process-card .step-pill { padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; background: rgba(53,214,222,0.08); color: var(--navy); }
+
+.skills-grid { display: flex; gap: 28px; flex: 1; min-height: 0; }
+.skills-sidebar { width: 310px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px; }
+.skills-main { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+
+@media print {
+  @page { size: 1920px 1080px; margin: 0; }
+  html, body { width: 1920px !important; height: auto !important; overflow: visible !important; background: #fff !important; }
+  .deck-shell { position: static !important; inset: auto !important; display: block !important; }
+  .deck-stage { transform: none !important; box-shadow: none !important; width: 1920px !important; height: auto !important; position: static !important; }
+  .slide { display: flex !important; position: relative !important; inset: auto !important; width: 1920px !important; height: 1080px !important; page-break-after: always; }
+  .slide:last-child { page-break-after: auto; }
+  .deck-counter, .nav-bar { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="nav-bar" id="top-nav">
+  <button data-slide="0" class="active"><span class="nav-num">01</span> Titel</button>
+  <button data-slide="1"><span class="nav-num">02</span> Motivation</button>
+  <button data-slide="2"><span class="nav-num">03</span> Prozess</button>
+  <button data-slide="3"><span class="nav-num">04</span> Skills</button>
+  <button data-slide="4"><span class="nav-num">05</span> Projekte</button>
+</div>
+
+<div class="deck-shell"><div class="deck-stage" id="deck-stage">
+
+<!-- SLIDE 01 — TITEL -->
+<section class="slide active s-layout s-title">
+  <div style="display:flex;align-items:center;gap:72px;max-width:1400px;width:100%">
+    <div class="photo-frame"><img src="Teamfoto_Marco_2.jpg" alt="Marco Grotemeyer"></div>
+    <div style="flex:1">
+      <div class="eyebrow" style="margin-bottom:24px">Bewerbung · Michelscom GmbH, Koblenz</div>
+      <h1 style="font-size:96px;color:var(--ink);letter-spacing:-0.03em;line-height:1.04;margin-bottom:16px">Marco Grotemeyer</h1>
+      <p style="font-size:34px;color:var(--muted);font-weight:400;letter-spacing:-0.006em;line-height:1.3;margin-bottom:28px">AI Coding &amp; Automation Expert — Recruiting auf KI trimmen</p>
+      <a href="#" onclick="document.querySelector('[data-slide=\"4\"]').click();return false" class="cta-btn">
+        Projekte ansehen
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Marco Grotemeyer</span>
+    <span>marco@marcogrotemeyer.de</span>
+    <span>Bad Oeynhausen, NRW</span>
+  </div>
+</section>
+
+<!-- SLIDE 02 — MOTIVATION -->
+<section class="slide s-layout s-letter">
+  <div style="display:flex;align-items:center;justify-content:center;height:100%;width:100%">
+    <div style="max-width:1640px;width:100%;background:var(--surface-glass);border:1px solid var(--border-alpha);border-radius:32px;padding:48px 72px 40px;box-shadow:var(--shadow)">
+      <p style="font-size:32px;color:var(--ink);font-weight:500;margin-bottom:16px;font-family:var(--font-display);letter-spacing:-0.01em">Hallo zusammen,</p>
+      <p style="font-size:18px;color:var(--muted);line-height:1.55;margin-bottom:14px">ich baue seit zwei Jahren täglich KI-Lösungen. Nicht als Konzept, sondern in Produktion — mit echten Kunden, echten Daten und echtem Anspruch an Datenschutz. Das ist mein Alltag: Prozesse aufbrechen, API-Calls orchestrieren, Agenten bauen, die liefern.</p>
+      <p style="font-size:18px;color:var(--muted);line-height:1.55;margin-bottom:14px">Was mich antreibt? Ich sehe eine Lücke im Prozess und will sie schließen — nicht mit einem Tool, das irgendwer verkauft, sondern mit einer Lösung, die genau sitzt. Zweimal von Hand gemacht? Beim dritten Mal automatisiert. Das ist kein Anspruch, das ist Arbeitsweise.</p>
+      <div style="font-family:var(--font-display);font-size:28px;font-weight:500;color:var(--navy);line-height:1.2;letter-spacing:-0.015em;margin:20px 0;padding-left:24px;border-left:3px solid var(--teal)">Ich will nicht irgendwo ein Tool dazuschalten. Ich will Abläufe auseinandernehmen und neu denken. Und vor allem: liefern.</div>
+      <div style="height:1px;background:var(--border-alpha);margin:0 0 18px 0"></div>
+      <p style="font-family:var(--font-display);font-size:14px;font-weight:500;color:var(--teal);letter-spacing:0.02em;margin-bottom:12px">Michelscom sucht → Marco bringt</p>
+      <div style="display:flex;gap:12px">
+        <div style="flex:1;background:rgba(42,80,141,0.03);border-radius:16px;padding:14px 16px">
+          <p style="font-size:10px;font-weight:600;color:var(--teal);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">LLMs & Agentic Workflows</p>
+          <p style="font-size:13px;color:var(--muted);line-height:1.5">Tägliche Praxis mit ChatGPT, Claude, Gemini — orchestriert via OpenCode Agents + n8n</p>
+        </div>
+        <div style="flex:1;border-radius:16px;padding:14px 16px">
+          <p style="font-size:10px;font-weight:600;color:var(--teal);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">No/Low-Code + Custom Bots</p>
+          <p style="font-size:13px;color:var(--muted);line-height:1.5">n8n-Workflows, Make, HubSpot-API. Bots im Live-Betrieb, nicht nur im Test</p>
+        </div>
+        <div style="flex:1;background:rgba(42,80,141,0.03);border-radius:16px;padding:14px 16px">
+          <p style="font-size:10px;font-weight:600;color:var(--teal);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">Data Enrichment & Sourcing</p>
+          <p style="font-size:13px;color:var(--muted);line-height:1.5">Clay, HubSpot, Lead-Scoring — personalisierte Outreach-Strecken, vollautomatisch</p>
+        </div>
+        <div style="flex:1;border-radius:16px;padding:14px 16px">
+          <p style="font-size:10px;font-weight:600;color:var(--teal);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">Prozess-Architektur</p>
+          <p style="font-size:13px;color:var(--muted);line-height:1.5">Manuelle Schritte finden, durch saubere Agenten-Strukturen ersetzen, skalieren</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Marco Grotemeyer</span>
+    <span>marco@marcogrotemeyer.de</span>
+    <span>Bad Oeynhausen, NRW</span>
+  </div>
+</section>
+
+<!-- SLIDE 03 — PROZESS -->
+<section class="slide s-layout s-cards" style="padding-top:24px;padding-bottom:32px">
+  <div class="fw-eyecatch" style="margin-bottom:16px"><h2 style="font-size:28px">Process Mapping first — wo KI denkt, wo der Mensch führt</h2><p class="fw-sub">Prompt → Agent baut → Ship. In Stunden, nicht Wochen.</p></div>
+  <div style="flex:1;min-height:0;display:flex;justify-content:center;align-items:center">
+    <svg viewBox="0 0 1680 700" style="width:100%;height:100%;max-height:100%" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="pg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#35d6de" stop-opacity="0.5"/>
+          <stop offset="50%" stop-color="#2299c4" stop-opacity="0.4"/>
+          <stop offset="100%" stop-color="#2a508d" stop-opacity="0.6"/>
+        </linearGradient>
+        <marker id="ah" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#6b7691"/></marker>
+      </defs>
+
+      <!-- STEP 3 — Ship -->
+      <rect x="10" y="30" width="1080" height="155" rx="24" fill="#f6f5ef" stroke="#35d6de" stroke-opacity="0.25" stroke-width="1.5"/>
+      <circle cx="54" cy="107" r="30" fill="rgba(53,214,222,0.15)"/>
+      <text x="54" y="116" text-anchor="middle" font-size="24" font-weight="600" fill="#061026" font-family="sans-serif">03</text>
+      <line x1="96" y1="55" x2="96" y2="160" stroke="rgba(53,214,222,0.25)" stroke-width="1"/>
+      <text x="120" y="84" font-size="22" font-weight="500" fill="#061026" letter-spacing="-0.01em" font-family="sans-serif">»Deploy in Stunden, iterieren in Tagen«</text>
+      <text x="120" y="112" font-size="15" font-weight="600" fill="#2a508d" font-family="sans-serif">Ship — Live &amp; Feedback-Loop</text>
+      <text x="120" y="140" font-size="14" fill="#4a5878" font-family="sans-serif">Vercel Deploy · n8n Produktion · HubSpot Integration · Was funktioniert bleibt, was nicht fliegt raus</text>
+      <text x="800" y="82" font-size="14" font-weight="700" fill="#4a5878" text-anchor="end" letter-spacing="0.06em" font-family="sans-serif">Mensch</text>
+      <rect x="810" y="75" width="140" height="8" rx="4" fill="rgba(53,214,222,0.12)"/>
+      <rect x="810" y="75" width="35" height="8" rx="4" fill="#35d6de"/>
+      <text x="960" y="82" font-size="14" font-weight="600" fill="#4a5878" letter-spacing="0.04em" font-family="sans-serif">führend</text>
+
+      <line x1="550" y1="185" x2="550" y2="255" stroke="url(#pg)" stroke-width="2"/>
+      <circle cx="550" cy="220" r="5" fill="#2a508d" opacity="0.5"/>
+
+      <!-- STEP 2 — Agent -->
+      <rect x="10" y="255" width="1080" height="155" rx="24" fill="#f6f5ef" stroke="#35d6de" stroke-opacity="0.3" stroke-width="1.5"/>
+      <circle cx="54" cy="332" r="30" fill="rgba(53,214,222,0.2)"/>
+      <text x="54" y="341" text-anchor="middle" font-size="24" font-weight="600" fill="#061026" font-family="sans-serif">02</text>
+      <line x1="96" y1="280" x2="96" y2="385" stroke="rgba(53,214,222,0.3)" stroke-width="1"/>
+      <text x="120" y="309" font-size="22" font-weight="500" fill="#061026" letter-spacing="-0.01em" font-family="sans-serif">»Was passiert, wenn der Agent deinen Prozess orchestriert?«</text>
+      <text x="120" y="337" font-size="15" font-weight="600" fill="#2a508d" font-family="sans-serif">Agent baut — OpenCode orchestriert APIs &amp; schreibt Code</text>
+      <text x="120" y="365" font-size="14" fill="#4a5878" font-family="sans-serif">HubSpot API · Fireflies · Craft MCP · Claude/GPT · React + FastAPI · TypeScript · Tests · Review</text>
+      <text x="800" y="307" font-size="14" font-weight="700" fill="#2a508d" text-anchor="end" letter-spacing="0.06em" font-family="sans-serif">Mix</text>
+      <rect x="810" y="300" width="140" height="8" rx="4" fill="rgba(53,214,222,0.15)"/>
+      <rect x="810" y="300" width="84" height="8" rx="4" fill="#35d6de"/>
+      <text x="960" y="307" font-size="14" font-weight="600" fill="#2a508d" letter-spacing="0.04em" font-family="sans-serif">gemeinsam</text>
+
+      <line x1="550" y1="410" x2="550" y2="480" stroke="url(#pg)" stroke-width="2"/>
+      <circle cx="550" cy="445" r="5" fill="#35d6de" opacity="0.5"/>
+
+      <!-- STEP 1 — Prompt -->
+      <rect x="10" y="480" width="1080" height="155" rx="24" fill="#2a508d"/>
+      <circle cx="54" cy="557" r="30" fill="rgba(0,0,0,0.15)"/>
+      <text x="54" y="566" text-anchor="middle" font-size="24" font-weight="600" fill="#fff" font-family="sans-serif">01</text>
+      <line x1="96" y1="505" x2="96" y2="610" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+      <text x="120" y="534" font-size="22" font-weight="500" fill="#fff" letter-spacing="-0.01em" font-family="sans-serif">»Welches Problem lösen wir — und welche APIs brauchen wir?«</text>
+      <text x="120" y="562" font-size="15" font-weight="600" fill="rgba(255,255,255,0.85)" font-family="sans-serif">Prompt — Use-Case-Discovery &amp; API-Mapping</text>
+      <text x="120" y="590" font-size="14" fill="rgba(255,255,255,0.7)" font-family="sans-serif">Problem in Sprache beschreiben · Hebel identifizieren · API-Calls planen — bevor eine Zeile Code entsteht</text>
+      <text x="800" y="531" font-size="14" font-weight="700" fill="rgba(255,255,255,0.85)" text-anchor="end" letter-spacing="0.06em" font-family="sans-serif">KI</text>
+      <rect x="810" y="524" width="140" height="8" rx="4" fill="rgba(255,255,255,0.15)"/>
+      <rect x="810" y="524" width="126" height="8" rx="4" fill="#35d6de"/>
+      <text x="960" y="531" font-size="14" font-weight="600" fill="#35d6de" letter-spacing="0.04em" font-family="sans-serif">stark</text>
+
+      <!-- RIGHT — Loop & Dark Accent -->
+      <rect x="1140" y="30" width="520" height="280" rx="24" stroke="#35d6de" stroke-opacity="0.2" stroke-width="1" fill="rgba(255,255,255,0.5)"/>
+      <text x="1400" y="58" text-anchor="middle" font-size="15" font-weight="600" fill="#4a5878" letter-spacing="0.04em" font-family="sans-serif">Agentic Development Loop</text>
+      <rect x="1170" y="80" width="190" height="60" rx="18" fill="rgba(42,80,141,0.08)"/>
+      <text x="1265" y="104" text-anchor="middle" font-size="13" font-weight="600" fill="#061026" font-family="sans-serif">Prompt</text>
+      <text x="1265" y="124" text-anchor="middle" font-size="10" fill="#4a5878" font-family="sans-serif">Describe + Discover APIs</text>
+      <rect x="1480" y="80" width="180" height="60" rx="18" fill="rgba(53,214,222,0.12)"/>
+      <text x="1570" y="104" text-anchor="middle" font-size="13" font-weight="600" fill="#061026" font-family="sans-serif">Review &amp; Ship</text>
+      <text x="1570" y="124" text-anchor="middle" font-size="10" fill="#4a5878" font-family="sans-serif">Deploy + Feedback</text>
+      <path d="M1360,110 C1385,85 1395,135 1420,110 C1445,85 1455,135 1480,110" stroke="#35d6de" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M1360,110 C1385,135 1395,85 1420,110 C1445,135 1455,85 1480,110" stroke="#35d6de" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <rect x="1355" y="170" width="130" height="34" rx="17" fill="rgba(255,255,255,0.8)" stroke="#35d6de" stroke-opacity="0.3" stroke-width="1"/>
+      <text x="1420" y="193" text-anchor="middle" font-size="20" font-weight="600" fill="#35d6de" font-family="sans-serif">∞</text>
+      <text x="1420" y="265" text-anchor="middle" font-size="13" fill="#4a5878" font-family="sans-serif">Prompt → Agent → Ship → Repeat</text>
+
+      <rect x="1140" y="335" width="520" height="170" rx="24" fill="#061026"/>
+      <text x="1400" y="385" text-anchor="middle" font-size="28" font-weight="500" fill="#fff" letter-spacing="-0.015em" font-family="sans-serif">Der Agent orchestriert APIs.</text>
+      <text x="1400" y="425" text-anchor="middle" font-size="28" font-weight="500" fill="#35d6de" letter-spacing="-0.015em" font-family="sans-serif">Ich steuere den Prozess.</text>
+      <line x1="1260" y1="455" x2="1540" y2="455" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+      <text x="1400" y="482" text-anchor="middle" font-size="14" fill="rgba(255,255,255,0.6)" font-family="sans-serif">Ergebnis vor Aufwand — gemessen an Geschwindigkeit &amp; Qualität.</text>
+    </svg>
+  </div>
+  <div class="slide-footer">
+    <span>Marco Grotemeyer</span>
+    <span>marco@marcogrotemeyer.de</span>
+    <span>Bad Oeynhausen, NRW</span>
+  </div>
+</section>
+
+<!-- SLIDE 04 — SKILLS -->
+<section class="slide s-layout s-cards" style="padding-top:24px;padding-bottom:32px">
+  <div class="fw-eyecatch" style="margin-bottom:16px"><h2 style="font-size:28px">Skills &amp; Daily Stack</h2><p class="fw-sub">Was ich jeden Tag nutze, um Recruiting-Prozesse zu automatisieren</p></div>
+  <div class="skills-grid">
+    <div class="skills-sidebar">
+      <div class="card card-sm" style="flex:1">
+        <h2 style="font-size:19px;margin-bottom:14px">Kompetenzen</h2>
+        <ul style="display:flex;flex-direction:column;gap:6px">
+          <li style="font-size:14px;padding:6px 10px;border-radius:8px;background:rgba(53,214,222,0.06)">Agentic Workflows (OpenCode)</li>
+          <li style="font-size:14px;padding:6px 10px;border-radius:8px;background:rgba(53,214,222,0.06)">n8n Automation & Orchestration</li>
+          <li style="font-size:14px;padding:6px 10px;border-radius:8px;background:rgba(53,214,222,0.06)">LLM Prompt Engineering</li>
+          <li style="font-size:14px;padding:6px 10px;border-radius:8px;background:rgba(53,214,222,0.06)">API-Integration (REST/GraphQL)</li>
+          <li style="font-size:14px;padding:6px 10px;border-radius:8px;background:rgba(53,214,222,0.06)">React/TypeScript/FastAPI</li>
+          <li style="font-size:14px;padding:6px 10px;border-radius:8px;background:rgba(53,214,222,0.06)">HubSpot CRM Automation</li>
+          <li style="font-size:14px;padding:6px 10px;border-radius:8px;background:rgba(53,214,222,0.06)">Clay Data Enrichment</li>
+          <li style="font-size:14px;padding:6px 10px;border-radius:8px;background:rgba(53,214,222,0.06)">Fireflies Call Intelligence</li>
+          <li style="font-size:14px;padding:6px 10px;border-radius:8px;background:rgba(53,214,222,0.06)">Craft MCP / Knowledge Mgmt</li>
+          <li style="font-size:14px;padding:6px 10px;border-radius:8px;background:rgba(53,214,222,0.06)">DSGVO-konforme Architektur</li>
+        </ul>
+      </div>
+    </div>
+    <div class="skills-main">
+      <div class="card" style="flex:1">
+        <h2 style="font-size:22px;margin-bottom:16px">Daily Tools</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div><h3 style="font-size:16px;color:var(--ink);margin-bottom:8px">AI & LLMs</h3><p style="font-size:14px;color:var(--muted);line-height:1.6">Claude Sonnet, GPT-4o, DeepSeek, Gemini · OpenRouter API · Prompt Engineering · Agent Orchestration via OpenCode</p></div>
+          <div><h3 style="font-size:16px;color:var(--ink);margin-bottom:8px">Automation</h3><p style="font-size:14px;color:var(--muted);line-height:1.6">n8n (Self-Hosted) · Make · Zapier · Telegram Bots · Webhooks · Cron-triggered Workflows</p></div>
+          <div><h3 style="font-size:16px;color:var(--ink);margin-bottom:8px">CRM & Data</h3><p style="font-size:14px;color:var(--muted);line-height:1.6">HubSpot API · Clay · Fireflies · SQLite/PostgreSQL · CSV/Excel Automation</p></div>
+          <div><h3 style="font-size:16px;color:var(--ink);margin-bottom:8px">Dev & Deploy</h3><p style="font-size:14px;color:var(--muted);line-height:1.6">React 19 + TypeScript · FastAPI · Tailwind CSS · Vercel · Vite · Git</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>Marco Grotemeyer</span>
+    <span>marco@marcogrotemeyer.de</span>
+    <span>Bad Oeynhausen, NRW</span>
+  </div>
+</section>
+
+<!-- SLIDE 05 — PROJEKTE -->
+<section class="slide s-layout" style="padding:48px 100px 56px;background:var(--cream)">
+  <div style="text-align:center;margin-bottom:28px;flex-shrink:0">
+    <h2 style="font-family:var(--font-display);font-size:32px;font-weight:500;color:#1a2e4d;letter-spacing:-0.02em;margin-bottom:4px">Projekte, die zeigen was geht</h2>
+    <p style="font-size:16px;color:#515b6e;font-weight:400">Gebaut mit Stack und Workflow aus Slide 03 — live einsatzfähig</p>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;flex:1;min-height:0">
+    <a href="hr-signals.html" style="background:#fff;border:1px solid rgba(26,46,77,0.08);border-radius:24px;padding:20px;box-shadow:0 2px 16px rgba(26,46,77,0.05);display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s;overflow:hidden" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(26,46,77,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+      <svg viewBox="0 0 340 160" style="width:100%;height:140px;border-radius:12px;background:#f8f7f4;display:block;flex-shrink:0"><rect width="340" height="160" fill="#f8f7f4" rx="10"/><rect x="20" y="16" width="180" height="26" rx="8" fill="#fff" stroke="rgba(26,46,77,0.1)"/><text x="30" y="33" font-size="11" fill="#515b6e" font-family="sans-serif">Java</text><circle cx="224" cy="29" r="12" fill="#35d6de"/><text x="224" y="33" text-anchor="middle" font-size="9" font-weight="700" fill="#fff" font-family="sans-serif">GO</text><line x1="20" y1="56" x2="320" y2="56" stroke="rgba(26,46,77,0.05)"/><rect x="20" y="68" width="300" height="6" rx="3" fill="rgba(26,46,77,0.06)"/><rect x="20" y="82" width="240" height="6" rx="3" fill="rgba(26,46,77,0.06)"/><rect x="20" y="96" width="280" height="6" rx="3" fill="rgba(26,46,77,0.06)"/><rect x="20" y="110" width="200" height="6" rx="3" fill="rgba(26,46,77,0.06)"/><rect x="20" y="132" width="80" height="18" rx="6" fill="rgba(53,214,222,0.15)"/><text x="60" y="144" text-anchor="middle" font-size="9" font-weight="600" fill="#1a2e4d" font-family="sans-serif">CSV</text><rect x="110" y="132" width="80" height="18" rx="6" fill="rgba(53,214,222,0.15)"/><text x="150" y="144" text-anchor="middle" font-size="9" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Excel</text></svg>
+      <h3 style="font-family:var(--font-display);font-size:19px;font-weight:500;color:#1a2e4d">HR Signals</h3>
+      <p style="font-size:14px;color:#515b6e;line-height:1.5">Aus 6 Millionen Job-Anzeigen werden Verkaufssignale. React + FastAPI, BA-API, CSV/Excel-Export.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:10px;border-top:1px solid rgba(26,46,77,0.06)"><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">React</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">FastAPI</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">BA-API</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">SQLite</span></div>
+    </a>
+    <a href="icp-pipeline.html" style="background:#fff;border:1px solid rgba(26,46,77,0.08);border-radius:24px;padding:20px;box-shadow:0 2px 16px rgba(26,46,77,0.05);display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s;overflow:hidden" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(26,46,77,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+      <svg viewBox="0 0 340 160" style="width:100%;height:140px;border-radius:12px;background:#f8f7f4;display:block;flex-shrink:0"><rect width="340" height="160" fill="#f8f7f4" rx="10"/><text x="170" y="22" text-anchor="middle" font-size="11" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Full-Funnel Pipeline</text><rect x="16" y="36" width="62" height="28" rx="8" fill="#fff" stroke="rgba(26,46,77,0.1)"/><text x="47" y="54" text-anchor="middle" font-size="9" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Input</text><path d="M78 50 L96 50" stroke="#35d6de" stroke-width="2"/><rect x="98" y="36" width="62" height="28" rx="8" fill="#fff" stroke="rgba(26,46,77,0.1)"/><text x="129" y="54" text-anchor="middle" font-size="9" font-weight="600" fill="#1a2e4d" font-family="sans-serif">KI</text><path d="M160 50 L178 50" stroke="#35d6de" stroke-width="2"/><rect x="180" y="36" width="62" height="28" rx="8" fill="#fff" stroke="rgba(26,46,77,0.1)"/><text x="211" y="54" text-anchor="middle" font-size="9" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Score</text><path d="M242 50 L260 50" stroke="#35d6de" stroke-width="2"/><rect x="262" y="36" width="62" height="28" rx="8" fill="#1a2e4d"/><text x="293" y="54" text-anchor="middle" font-size="9" font-weight="600" fill="#fff" font-family="sans-serif">CRM</text><rect x="16" y="80" width="308" height="24" rx="8" fill="rgba(53,214,222,0.1)"/><text x="170" y="96" text-anchor="middle" font-size="9" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Qualifiziert · Branche: Industrie · Budget: Hoch</text><rect x="16" y="118" width="308" height="28" rx="8" fill="#fff" stroke="rgba(26,46,77,0.06)"/><text x="26" y="136" font-size="8" fill="#515b6e" font-family="sans-serif">LinkedIn: "Hi Roland, wir senken Time-to-Hire..."</text></svg>
+      <h3 style="font-family:var(--font-display);font-size:19px;font-weight:500;color:#1a2e4d">ICP Full-Funnel</h3>
+      <p style="font-size:14px;color:#515b6e;line-height:1.5">Firmenname rein → KI recherchiert → scored → Outreach → HubSpot. Live-Demo + n8n Download.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:10px;border-top:1px solid rgba(26,46,77,0.06)"><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">n8n</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">GPT-4o</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">HubSpot</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">Clay</span></div>
+    </a>
+    <a href="achilleus.html" style="background:#fff;border:1px solid rgba(26,46,77,0.08);border-radius:24px;padding:20px;box-shadow:0 2px 16px rgba(26,46,77,0.05);display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s;overflow:hidden" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(26,46,77,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+      <svg viewBox="0 0 340 160" style="width:100%;height:140px;border-radius:12px;background:#f8f7f4;display:block;flex-shrink:0"><rect width="340" height="160" fill="#f8f7f4" rx="10"/><text x="170" y="20" text-anchor="middle" font-size="11" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Second Brain Bot</text><rect x="20" y="34" width="300" height="112" rx="10" fill="#fff" stroke="rgba(26,46,77,0.06)"/><rect x="32" y="46" width="100" height="22" rx="8" fill="rgba(53,214,222,0.12)"/><text x="82" y="61" text-anchor="middle" font-size="9" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Telegram</text><path d="M132 57 L152 57" stroke="#35d6de" stroke-width="1.5"/><rect x="156" y="46" width="136" height="22" rx="8" fill="rgba(26,46,77,0.06)"/><text x="224" y="61" text-anchor="middle" font-size="9" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Claude</text><rect x="60" y="80" width="136" height="22" rx="8" fill="rgba(53,214,222,0.1)"/><text x="128" y="95" text-anchor="middle" font-size="9" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Craft MCP → Document</text><rect x="60" y="112" width="136" height="22" rx="8" fill="rgba(26,46,77,0.06)"/><text x="128" y="127" text-anchor="middle" font-size="9" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Sprachnachricht → Task</text></svg>
+      <h3 style="font-family:var(--font-display);font-size:19px;font-weight:500;color:#1a2e4d">Achilleus</h3>
+      <p style="font-size:14px;color:#515b6e;line-height:1.5">Second Brain: Telegram → Claude denkt → Craft speichert. Voice, Foto, Doc — alles automatisch.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:10px;border-top:1px solid rgba(26,46,77,0.06)"><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">n8n</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">Claude</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">Craft</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">Telegram</span></div>
+    </a>
+    <a href="ai-workspace.html" style="background:#fff;border:1px solid rgba(26,46,77,0.08);border-radius:24px;padding:20px;box-shadow:0 2px 16px rgba(26,46,77,0.05);display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s;overflow:hidden" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(26,46,77,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+      <svg viewBox="0 0 340 160" style="width:100%;height:140px;border-radius:12px;background:#f8f7f4;display:block;flex-shrink:0"><rect width="340" height="160" fill="#f8f7f4" rx="10"/><text x="170" y="18" text-anchor="middle" font-size="11" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Lokales KI-Workspace</text><circle cx="170" cy="64" r="22" fill="#1a2e4d"/><text x="170" y="60" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" font-family="sans-serif">KI</text><text x="170" y="73" text-anchor="middle" font-size="7" fill="rgba(255,255,255,0.8)" font-family="sans-serif">Hub</text><circle cx="52" cy="34" r="16" fill="#fff" stroke="rgba(26,46,77,0.1)"/><text x="52" y="38" text-anchor="middle" font-size="8" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Chat</text><circle cx="288" cy="34" r="16" fill="#fff" stroke="rgba(26,46,77,0.1)"/><text x="288" y="38" text-anchor="middle" font-size="8" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Docs</text><circle cx="62" cy="116" r="16" fill="#fff" stroke="rgba(26,46,77,0.1)"/><text x="62" y="120" text-anchor="middle" font-size="8" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Research</text><circle cx="278" cy="116" r="16" fill="#fff" stroke="rgba(26,46,77,0.1)"/><text x="278" y="120" text-anchor="middle" font-size="8" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Agents</text><circle cx="170" cy="116" r="16" fill="#fff" stroke="rgba(26,46,77,0.1)"/><text x="170" y="120" text-anchor="middle" font-size="8" font-weight="600" fill="#1a2e4d" font-family="sans-serif">LLMs</text><line x1="68" y1="44" x2="148" y2="56" stroke="rgba(26,46,77,0.08)" stroke-width="1"/><line x1="272" y1="44" x2="192" y2="56" stroke="rgba(26,46,77,0.08)" stroke-width="1"/><line x1="148" y1="76" x2="148" y2="100" stroke="rgba(26,46,77,0.08)" stroke-width="1"/><line x1="192" y1="76" x2="192" y2="100" stroke="rgba(26,46,77,0.08)" stroke-width="1"/><line x1="80" y1="120" x2="154" y2="120" stroke="rgba(26,46,77,0.08)" stroke-width="1"/><line x1="186" y1="120" x2="262" y2="120" stroke="rgba(26,46,77,0.08)" stroke-width="1"/><text x="170" y="148" text-anchor="middle" font-size="8" fill="#515b6e" font-family="sans-serif">Self-Hosted · Odysseus Fork · Kein Datenabfluss</text></svg>
+      <h3 style="font-family:var(--font-display);font-size:19px;font-weight:500;color:#1a2e4d">Lokales KI-Workspace</h3>
+      <p style="font-size:14px;color:#515b6e;line-height:1.5">Self-hosted LLM-Setup mit eigener Oberfläche — kein Datenabfluss, volle Hoheit für regulierte Umgebungen.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:10px;border-top:1px solid rgba(26,46,77,0.06)"><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">Odysseus Fork</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">Self-Hosted</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">LLM</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">Agents</span></div>
+    </a>
+  </div>
+  <div class="slide-footer">
+    <span>Marco Grotemeyer</span>
+    <span>marco@marcogrotemeyer.de</span>
+    <span>Bad Oeynhausen, NRW</span>
+  </div>
+</section>
+
+</div></div>
+
+<div class="deck-counter">
+  <button id="deck-prev" title="Zurück">←</button>
+  <div class="deck-count"><span id="deck-current">1</span> <span class="total">/ 5</span></div>
+  <button id="deck-next" title="Weiter">→</button>
+</div>
+
+<script>
+(function(){
+  var slides = document.querySelectorAll('.slide');
+  var prev = document.getElementById('deck-prev');
+  var next = document.getElementById('deck-next');
+  var currentLabel = document.getElementById('deck-current');
+  var navBtns = document.querySelectorAll('#top-nav button');
+  var STORE = 'michelscom-slide';
+  var idx = 0;
+
+  function fit(){
+    var sw = window.innerWidth, sh = window.innerHeight;
+    var scale = Math.min(sw/1920, sh/1080);
+    var stage = document.getElementById('deck-stage');
+    stage.style.transform = 'scale('+scale+')';
+    stage.style.marginLeft = ((sw - 1920*scale)/2)+'px';
+    stage.style.marginTop = ((sh - 1080*scale)/2)+'px';
+  }
+  function paint(){
+    slides.forEach(function(s,i){ s.classList.toggle('active', i===idx); });
+    currentLabel.textContent = idx+1;
+    prev.disabled = idx===0;
+    next.disabled = idx===slides.length-1;
+    navBtns.forEach(function(b){ b.classList.toggle('active', parseInt(b.dataset.slide)===idx); });
+    try { localStorage.setItem(STORE, String(idx)); } catch(_){}
+  }
+  function go(i){ idx = Math.max(0, Math.min(slides.length-1, i)); paint(); try { localStorage.setItem(STORE, String(idx)); } catch(_){} }
+  function onKey(e){
+    if(e.__deckKeyHandled) return;
+    var t = e.target;
+    if(t && (t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable)) return;
+    if(e.key==='ArrowRight'||e.key==='PageDown'){ e.__deckKeyHandled=true; e.preventDefault(); go(idx+1); }
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.__deckKeyHandled=true; e.preventDefault(); go(idx-1); }
+    else if(e.key==='Home'){ e.__deckKeyHandled=true; e.preventDefault(); go(0); }
+    else if(e.key==='End'){ e.__deckKeyHandled=true; e.preventDefault(); go(slides.length-1); }
+  }
+  window.addEventListener('keydown', onKey, true);
+  document.addEventListener('keydown', onKey, true);
+  prev.addEventListener('click', function(){ go(idx-1); });
+  next.addEventListener('click', function(){ go(idx+1); });
+  navBtns.forEach(function(b){ b.addEventListener('click', function(){ go(parseInt(b.dataset.slide)); }); });
+  document.body.setAttribute('tabindex','-1');
+  document.body.style.outline = 'none';
+  function focusDeck(){ try { window.focus(); document.body.focus({preventScroll:true}); } catch(_){} }
+  document.addEventListener('mousedown', focusDeck);
+  window.addEventListener('load', focusDeck);
+  try { var saved = parseInt(localStorage.getItem(STORE)||'0',10); if(!isNaN(saved)&&saved>=0&&saved<slides.length) idx=saved; } catch(_){}
+  window.addEventListener('resize', fit);
+  fit(); paint(); focusDeck();
+})();
+</script>
+
+<div class="img-popup-backdrop" id="imgPopup" onclick="closeImgPopup()">
+  <button class="popup-close" onclick="closeImgPopup()" aria-label="Schließen">×</button>
+  <div id="imgPopupContent"></div>
+</div>
+
+<script>
+var popupSVGs = {
+  hr: `<svg viewBox="0 0 1200 700" style="width:85vw;max-width:1100px">
+<rect width="1200" height="700" fill="#f6f5ef"/>
+<rect x="60" y="80" width="220" height="520" rx="16" fill="white" stroke="rgba(42,80,141,0.15)"/>
+<rect x="80" y="110" width="180" height="14" rx="7" fill="rgba(42,80,141,0.08)"/>
+<text x="170" y="124" text-anchor="middle" font-size="11" fill="#2a508d" font-family="sans-serif">Filter: Java, Berlin</text>
+<rect x="80" y="150" width="120" height="10" rx="5" fill="rgba(42,80,141,0.05)"/>
+<rect x="80" y="175" width="150" height="10" rx="5" fill="rgba(42,80,141,0.05)"/>
+<rect x="80" y="200" width="100" height="10" rx="5" fill="rgba(42,80,141,0.05)"/>
+<rect x="80" y="225" width="140" height="10" rx="5" fill="rgba(42,80,141,0.05)"/>
+<rect x="80" y="250" width="110" height="10" rx="5" fill="rgba(42,80,141,0.05)"/>
+<rect x="80" y="275" width="160" height="10" rx="5" fill="rgba(42,80,141,0.05)"/>
+<rect x="80" y="300" width="90" height="10" rx="5" fill="rgba(42,80,141,0.05)"/>
+<rect x="80" y="325" width="130" height="10" rx="5" fill="rgba(42,80,141,0.05)"/>
+<rect x="80" y="440" width="180" height="40" rx="10" fill="#2a508d"/>
+<text x="170" y="465" text-anchor="middle" font-size="15" font-weight="600" fill="#fff" font-family="sans-serif">CSV Export</text>
+<rect x="80" y="495" width="180" height="40" rx="10" fill="rgba(42,80,141,0.1)"/>
+<text x="170" y="520" text-anchor="middle" font-size="15" font-weight="600" fill="#2a508d" font-family="sans-serif">Excel Export</text>
+<rect x="320" y="80" width="840" height="520" rx="16" fill="white" stroke="rgba(42,80,141,0.1)"/>
+<text x="740" y="115" text-anchor="middle" font-size="18" font-weight="600" fill="#061026" font-family="sans-serif">6.247 Ergebnisse f&uuml;r &ldquo;Java&rdquo; in &ldquo;Berlin&rdquo;</text>
+<rect x="350" y="145" width="780" height="2" fill="rgba(42,80,141,0.06)"/>
+<rect x="350" y="165" width="320" height="12" rx="6" fill="rgba(42,80,141,0.06)"/>
+<rect x="690" y="165" width="140" height="12" rx="6" fill="rgba(42,80,141,0.06)"/>
+<rect x="350" y="195" width="280" height="12" rx="6" fill="rgba(42,80,141,0.04)"/>
+<rect x="690" y="195" width="160" height="12" rx="6" fill="rgba(42,80,141,0.04)"/>
+<rect x="350" y="225" width="350" height="12" rx="6" fill="rgba(42,80,141,0.06)"/>
+<rect x="690" y="225" width="120" height="12" rx="6" fill="rgba(42,80,141,0.06)"/>
+<rect x="350" y="255" width="260" height="12" rx="6" fill="rgba(42,80,141,0.04)"/>
+<rect x="690" y="255" width="150" height="12" rx="6" fill="rgba(42,80,141,0.04)"/>
+<rect x="350" y="285" width="300" height="12" rx="6" fill="rgba(42,80,141,0.06)"/>
+<rect x="690" y="285" width="130" height="12" rx="6" fill="rgba(42,80,141,0.06)"/>
+<rect x="350" y="315" width="240" height="12" rx="6" fill="rgba(42,80,141,0.04)"/>
+<rect x="690" y="315" width="170" height="12" rx="6" fill="rgba(42,80,141,0.04)"/>
+<rect x="350" y="345" width="340" height="12" rx="6" fill="rgba(42,80,141,0.06)"/>
+<rect x="690" y="345" width="110" height="12" rx="6" fill="rgba(42,80,141,0.06)"/>
+<rect x="350" y="440" width="200" height="20" rx="10" fill="rgba(42,80,141,0.04)"/>
+<rect x="350" y="475" width="160" height="20" rx="10" fill="rgba(42,80,141,0.04)"/>
+<text x="400" y="625" text-anchor="middle" font-size="16" font-weight="600" fill="#061026" font-family="sans-serif">HR Signals &mdash; Search Interface</text>
+</svg>`,
+  icp: `<svg viewBox="0 0 1100 500" style="width:85vw;max-width:1000px">
+<rect width="1100" height="500" fill="#f6f5ef"/>
+<rect x="30" y="60" width="200" height="60" rx="14" fill="white" stroke="rgba(42,80,141,0.15)"/>
+<text x="130" y="96" text-anchor="middle" font-size="16" font-weight="600" fill="#061026" font-family="sans-serif">Siemens</text>
+<path d="M230 90 L300 90" stroke="#6b7691" stroke-width="2"/>
+<rect x="305" y="60" width="200" height="60" rx="14" fill="white" stroke="rgba(42,80,141,0.12)"/>
+<text x="405" y="96" text-anchor="middle" font-size="14" font-weight="600" fill="#061026" font-family="sans-serif">KI Research</text>
+<path d="M505 90 L575 90" stroke="#6b7691" stroke-width="2"/>
+<rect x="580" y="60" width="200" height="60" rx="14" fill="white" stroke="rgba(42,80,141,0.12)"/>
+<text x="680" y="96" text-anchor="middle" font-size="14" font-weight="600" fill="#061026" font-family="sans-serif">Enrichment</text>
+<path d="M780 90 L850 90" stroke="#6b7691" stroke-width="2"/>
+<rect x="855" y="60" width="200" height="60" rx="14" fill="rgba(42,80,141,0.08)" stroke="rgba(42,80,141,0.2)"/>
+<text x="955" y="96" text-anchor="middle" font-size="14" font-weight="600" fill="#2a508d" font-family="sans-serif">Score: 78/100</text>
+<rect x="180" y="190" width="740" height="60" rx="14" fill="rgba(53,214,222,0.08)" stroke="rgba(53,214,222,0.15)"/>
+<text x="550" y="215" text-anchor="middle" font-size="15" font-weight="600" fill="#2a508d" font-family="sans-serif">Qualifiziert &mdash; Branche: Industrie &middot; Gr&ouml;&szlig;e: 311K &middot; Budget: Hoch &middot; Dringlichkeit: Hoch</text>
+<rect x="180" y="280" width="740" height="70" rx="14" fill="white" stroke="rgba(42,80,141,0.08)"/>
+<text x="200" y="308" font-size="12" font-weight="600" fill="#061026" font-family="sans-serif">LinkedIn-Connect:</text>
+<text x="200" y="330" font-size="12" fill="#4a5878" font-family="sans-serif">Hi Roland, Siemens stellt 2.400+ Positionen ein. Wir senken Time-to-Hire um 40% durch KI-Automation.</text>
+<rect x="180" y="370" width="740" height="35" rx="12" fill="rgba(42,80,141,0.1)"/>
+<text x="550" y="393" text-anchor="middle" font-size="13" font-weight="600" fill="#2a508d" font-family="sans-serif">&check; HubSpot: Contact + Deal erstellt &middot; E-Mail-Sequenz gestartet</text>
+<text x="550" y="460" text-anchor="middle" font-size="15" font-weight="600" fill="#061026" font-family="sans-serif">ICP Full-Funnel Pipeline &mdash; Ergebnis</text>
+</svg>`,
+  achilleus: `<svg viewBox="0 0 1000 500" style="width:85vw;max-width:950px">
+<rect width="1000" height="500" fill="#f6f5ef"/>
+<rect x="30" y="80" width="300" height="180" rx="16" fill="white" stroke="rgba(42,80,141,0.1)"/>
+<rect x="50" y="100" width="260" height="24" rx="6" fill="rgba(53,214,222,0.08)"/>
+<text x="180" y="116" text-anchor="middle" font-size="12" font-weight="600" fill="#061026" font-family="sans-serif">Achilleus Bot</text>
+<rect x="50" y="140" width="260" height="14" rx="7" fill="rgba(42,80,141,0.04)"/>
+<rect x="50" y="165" width="220" height="14" rx="7" fill="rgba(42,80,141,0.04)"/>
+<rect x="50" y="190" width="180" height="14" rx="7" fill="rgba(42,80,141,0.04)"/>
+<rect x="50" y="215" width="240" height="14" rx="7" fill="rgba(42,80,141,0.04)"/>
+<rect x="370" y="90" width="280" height="160" rx="16" fill="rgba(42,80,141,0.06)" stroke="rgba(42,80,141,0.12)"/>
+<text x="510" y="118" text-anchor="middle" font-size="14" font-weight="600" fill="#2a508d" font-family="sans-serif">Claude Sonnet</text>
+<text x="510" y="140" text-anchor="middle" font-size="11" fill="#4a5878" font-family="sans-serif">System Prompt: Achilleus</text>
+<text x="510" y="160" text-anchor="middle" font-size="11" fill="#4a5878" font-family="sans-serif">Routen: Tasks/Daily/Beyond925</text>
+<text x="510" y="180" text-anchor="middle" font-size="11" fill="#4a5878" font-family="sans-serif">Memory: 20 Messages</text>
+<rect x="690" y="90" width="280" height="160" rx="16" fill="rgba(53,214,222,0.06)" stroke="rgba(53,214,222,0.12)"/>
+<text x="830" y="118" text-anchor="middle" font-size="14" font-weight="600" fill="#2a508d" font-family="sans-serif">Craft MCP</text>
+<text x="830" y="140" text-anchor="middle" font-size="11" fill="#4a5878" font-family="sans-serif">Documents &middot; Tasks &middot; Folders</text>
+<text x="830" y="160" text-anchor="middle" font-size="11" fill="#4a5878" font-family="sans-serif">Daily Notes</text>
+<rect x="250" y="340" width="500" height="50" rx="12" fill="white" stroke="rgba(42,80,141,0.08)"/>
+<text x="500" y="372" text-anchor="middle" font-size="13" font-weight="600" fill="#061026" font-family="sans-serif">Telegram: &ldquo;Sprachnachricht &rarr; Task in Craft erstellt&rdquo;</text>
+<text x="500" y="440" text-anchor="middle" font-size="15" font-weight="600" fill="#061026" font-family="sans-serif">Achilleus &mdash; Second Brain Bot</text>
+</svg>`,
+  workspace: `<svg viewBox="0 0 1000 500" style="width:85vw;max-width:950px">
+<rect width="1000" height="500" fill="#f6f5ef"/>
+<circle cx="500" cy="220" r="70" fill="rgba(42,80,141,0.06)" stroke="rgba(42,80,141,0.15)"/>
+<text x="500" y="212" text-anchor="middle" font-size="22" font-weight="600" fill="#2a508d" font-family="sans-serif">KI Workspace</text>
+<text x="500" y="236" text-anchor="middle" font-size="12" fill="#4a5878" font-family="sans-serif">Self-Hosted &middot; Odysseus Fork</text>
+<circle cx="260" cy="100" r="40" fill="white" stroke="rgba(42,80,141,0.12)"/>
+<text x="260" y="104" text-anchor="middle" font-size="14" font-weight="600" fill="#061026" font-family="sans-serif">LLMs</text>
+<circle cx="690" cy="90" r="40" fill="white" stroke="rgba(42,80,141,0.12)"/>
+<text x="690" y="94" text-anchor="middle" font-size="14" font-weight="600" fill="#061026" font-family="sans-serif">Chat</text>
+<circle cx="800" cy="260" r="40" fill="white" stroke="rgba(42,80,141,0.12)"/>
+<text x="800" y="264" text-anchor="middle" font-size="14" font-weight="600" fill="#061026" font-family="sans-serif">Agents</text>
+<circle cx="250" cy="370" r="40" fill="white" stroke="rgba(42,80,141,0.12)"/>
+<text x="250" y="374" text-anchor="middle" font-size="14" font-weight="600" fill="#061026" font-family="sans-serif">Research</text>
+<circle cx="580" y="380" r="40" fill="white" stroke="rgba(42,80,141,0.12)"/>
+<text x="580" y="384" text-anchor="middle" font-size="13" font-weight="600" fill="#061026" font-family="sans-serif">Docs</text>
+<circle cx="700" y="380" r="30" fill="white" stroke="rgba(42,80,141,0.08)"/>
+<text x="700" y="384" text-anchor="middle" font-size="11" fill="#4a5878" font-family="sans-serif">Email</text>
+<circle cx="130" y="230" r="30" fill="white" stroke="rgba(42,80,141,0.08)"/>
+<text x="130" y="234" text-anchor="middle" font-size="11" fill="#4a5878" font-family="sans-serif">Calendar</text>
+<line x1="300" y1="110" x2="430" y2="170" stroke="rgba(42,80,141,0.1)" stroke-width="1.5"/>
+<line x1="650" y1="110" x2="570" y2="180" stroke="rgba(42,80,141,0.1)" stroke-width="1.5"/>
+<line x1="750" y1="250" x2="570" y2="235" stroke="rgba(42,80,141,0.1)" stroke-width="1.5"/>
+<line x1="430" y1="270" x2="290" y2="350" stroke="rgba(42,80,141,0.1)" stroke-width="1.5"/>
+<line x1="430" y1="270" x2="540" y2="360" stroke="rgba(42,80,141,0.1)" stroke-width="1.5"/>
+<text x="500" y="460" text-anchor="middle" font-size="15" font-weight="600" fill="#061026" font-family="sans-serif">Lokales KI-Workspace f&uuml;r Unternehmen</text>
+</svg>`
+};
+
+function openImgPopup(key, e) {
+  var el = document.getElementById('imgPopup');
+  var content = document.getElementById('imgPopupContent');
+  content.innerHTML = popupSVGs[key] || '';
+  el.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if (e) { e.stopPropagation(); e.preventDefault(); }
+}
+function closeImgPopup() {
+  var el = document.getElementById('imgPopup');
+  el.classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeImgPopup(); });
+</script>
+</body>
+</html>
