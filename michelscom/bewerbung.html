@@ -109,6 +109,88 @@ h3 { font-family: var(--font-body); font-weight: 600; }
 .skills-sidebar { width: 310px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px; }
 .skills-main { flex: 1; display: flex; flex-direction: column; gap: 16px; }
 
+/* PROJECT POPUP — loads subpage content into modal */
+.project-popup-backdrop { position: fixed; inset: 0; z-index: 2000; background: rgba(8,9,13,0.88); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; padding: 2rem; opacity: 0; pointer-events: none; transition: opacity 0.22s; }
+.project-popup-backdrop.open { opacity: 1; pointer-events: auto; }
+.project-popup-container { position: relative; width: 92vw; max-width: 58rem; max-height: 88vh; background: var(--cream); border-radius: 1.75rem; box-shadow: 0 30px 80px rgba(0,0,0,0.45); overflow: hidden; }
+.project-popup-close { position: absolute; top: 1rem; right: 1rem; z-index: 10; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.85); border: 1px solid var(--border-alpha); border-radius: 999px; color: var(--ink); font-size: 1.25rem; cursor: pointer; transition: background 0.15s; }
+.project-popup-close:hover { background: #fff; }
+.project-popup-scroll { overflow-y: auto; max-height: 88vh; padding: 2rem 2.5rem 1.5rem; }
+.project-popup-scroll header { padding-top: 0; }
+
+/* Scoped subpage styles for injected content */
+.project-popup-scope .section { margin-bottom: 2rem; }
+.project-popup-scope header { padding: 1.5rem 0 1rem; }
+.project-popup-scope .back-link { display: none; }
+.project-popup-scope .card { background: var(--surface); backdrop-filter: blur(12px) saturate(150%); border: 1px solid var(--border-alpha); border-radius: 1.5rem; box-shadow: var(--shadow); overflow: hidden; margin-bottom: 2rem; }
+.project-popup-scope .card-body { padding: 2rem 2rem 2.5rem; }
+.project-popup-scope .card h2 { font-family: Chillax,sans-serif; font-size: 1.375rem; font-weight: 600; color: var(--ink); margin-bottom: 1rem; }
+.project-popup-scope .sub { font-size: 1.0625rem; color: var(--muted); margin-top: 0.75rem; max-width: 40rem; }
+.project-popup-scope .stat-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(8rem,1fr)); gap: 1rem; }
+.project-popup-scope .stat { background: rgba(255,255,255,0.5); border: 1px solid var(--border-alpha); border-radius: 1rem; padding: 1.25rem; text-align: center; }
+.project-popup-scope .stat .value { font-family: Chillax,sans-serif; font-size: 1.5rem; font-weight: 600; color: var(--navy); }
+.project-popup-scope .stat .label { font-size: 0.8125rem; color: var(--subtle); margin-top: 0.25rem; }
+.project-popup-scope .tech-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+.project-popup-scope .tech-pill { padding: 0.375rem 0.875rem; border-radius: 9999px; font-size: 0.8125rem; font-weight: 500; color: var(--muted); background: rgba(255,255,255,0.6); border: 1px solid var(--border-alpha); }
+.project-popup-scope .tech-pill.hl { color: var(--navy); background: color-mix(in srgb,var(--navy) 10%,transparent); border-color: color-mix(in srgb,var(--navy) 20%,transparent); }
+.project-popup-scope pre { background: color-mix(in srgb,var(--ink) 6%,transparent); border: 1px solid var(--border-alpha); border-radius: 0.75rem; padding: 1rem; font-size: 0.8125rem; line-height: 1.7; color: var(--muted); overflow-x: auto; font-family: "SF Mono","Fira Code",monospace; }
+.project-popup-scope .env-block { background: color-mix(in srgb,var(--ink) 4%,transparent); border: 1px solid var(--border-alpha); border-radius: 0.75rem; padding: 0.875rem 1rem; margin-top: 0.75rem; font-family: "SF Mono","Fira Code",monospace; font-size: 0.75rem; line-height: 1.7; color: var(--muted); }
+.project-popup-scope .impact-banner { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; background: color-mix(in srgb,var(--teal) 10%,transparent); border: 1px solid color-mix(in srgb,var(--teal) 18%,transparent); border-radius: 1rem; margin-top: 1.5rem; font-size: 0.875rem; color: var(--muted); }
+.project-popup-scope .impact-banner strong { color: var(--navy); }
+.project-popup-scope .step-guide { counter-reset: step; margin-top: 1rem; }
+.project-popup-scope .step { counter-increment: step; display: flex; gap: 1rem; padding: 0.85rem 0; border-bottom: 1px solid var(--border-alpha); }
+.project-popup-scope .step:last-child { border-bottom: none; }
+.project-popup-scope .step::before { content: counter(step); flex-shrink: 0; width: 1.75rem; height: 1.75rem; border-radius: 50%; background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: center; font-family: Chillax,sans-serif; font-size: 0.75rem; font-weight: 600; }
+.project-popup-scope .step .step-title { font-weight: 700; color: var(--ink); margin-bottom: 0.125rem; }
+.project-popup-scope .step .step-desc { font-size: 0.875rem; color: var(--muted); }
+.project-popup-scope .step code { background: color-mix(in srgb,var(--ink) 5%,transparent); padding: 0.125rem 0.375rem; border-radius: 0.375rem; font-size: 0.8125rem; color: var(--navy); }
+.project-popup-scope .flowchart-svg { width: 100%; max-width: 50rem; display: block; margin: 0 auto; }
+.project-popup-scope .flowchart-svg .fc-box { fill: var(--surface); stroke: var(--border-alpha); stroke-width: 1; }
+.project-popup-scope .flowchart-svg .fc-box.hl { fill: color-mix(in srgb,var(--navy) 10%,transparent); stroke: color-mix(in srgb,var(--navy) 30%,transparent); }
+.project-popup-scope .flowchart-svg .fc-label { fill: var(--ink); font-size: 12px; font-weight: 600; }
+.project-popup-scope .flowchart-svg .fc-sub { fill: var(--subtle); font-size: 10px; }
+.project-popup-scope .flowchart-svg .fc-arrow { stroke: var(--subtle); stroke-width: 1.5; fill: none; }
+.project-popup-scope .flowchart-svg .fc-arrow-reply { stroke: var(--teal); stroke-width: 1.5; fill: none; stroke-dasharray: 5 3; }
+.project-popup-scope .flowchart-svg .fc-line { stroke: var(--border-alpha); stroke-width: 1; stroke-dasharray: 4 3; }
+.project-popup-scope .feature-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(14rem,1fr)); gap: 1rem; margin: 1.5rem 0; }
+.project-popup-scope .feature { border: 1px solid var(--border-alpha); border-radius: 1rem; padding: 1.25rem; background: rgba(255,255,255,0.4); }
+.project-popup-scope .feature h3 { font-family: Chillax,sans-serif; font-size: 1.0625rem; font-weight: 600; color: var(--ink); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+.project-popup-scope .feature p { font-size: 0.875rem; color: var(--subtle); line-height: 1.5; }
+.project-popup-scope .github-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 0.75rem; background: var(--navy); color: #fff; text-decoration: none; font-weight: 600; font-size: 0.9375rem; transition: background 0.15s; }
+.project-popup-scope .github-btn:hover { background: var(--ink); }
+.project-popup-scope .dl-btn, .project-popup-scope [download] { display: none !important; }
+
+/* ICP simulation (icp-pipeline subpage) */
+.project-popup-scope .icp-sim { background: rgba(255,255,255,0.55); border: 1px solid var(--border-alpha); border-radius: 1rem; padding: 1.5rem; margin: 1.5rem 0; }
+.project-popup-scope .icp-sim input { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-alpha); border-radius: 0.75rem; font-family: Satoshi,sans-serif; font-size: 0.9375rem; color: var(--ink); background: #fff; outline: none; }
+.project-popup-scope .icp-sim input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px color-mix(in srgb,var(--navy) 12%,transparent); }
+.project-popup-scope .icp-sim .sim-btn { padding: 0.75rem 2rem; border-radius: 9999px; font-family: Satoshi,sans-serif; font-size: 0.9375rem; font-weight: 600; color: #fff; background: var(--navy); border: none; cursor: pointer; transition: background 0.2s; white-space: nowrap; }
+.project-popup-scope .icp-sim .sim-btn:hover { background: color-mix(in srgb,var(--navy) 88%,transparent); }
+.project-popup-scope .icp-sim .sim-btn:disabled { opacity: 0.5; pointer-events: none; }
+.project-popup-scope .icp-sim .sim-row { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
+.project-popup-scope .icp-steps { display: flex; flex-direction: column; gap: 0.5rem; }
+.project-popup-scope .icp-step { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 0.75rem; font-size: 0.875rem; color: var(--subtle); transition: all 0.4s var(--ease); opacity: 0.35; }
+.project-popup-scope .icp-step.active { opacity: 1; color: var(--ink); background: rgba(255,255,255,0.6); border: 1px solid var(--border-alpha); }
+.project-popup-scope .icp-step.done { opacity: 0.85; color: var(--navy); }
+.project-popup-scope .icp-step .icp-icon { flex-shrink: 0; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--border-alpha); display: flex; align-items: center; justify-content: center; font-size: 0.6875rem; }
+.project-popup-scope .icp-step.active .icp-icon { background: var(--navy); color: #fff; }
+.project-popup-scope .icp-step.done .icp-icon { background: var(--teal); color: #fff; }
+.project-popup-scope .icp-result { display: none; margin-top: 1rem; padding: 1rem; border-radius: 0.75rem; font-size: 0.875rem; }
+.project-popup-scope .icp-result.qualified { background: color-mix(in srgb,var(--teal) 10%,transparent); border: 1px solid color-mix(in srgb,var(--teal) 25%,transparent); }
+.project-popup-scope .icp-result.cold { background: color-mix(in srgb,var(--navy) 6%,transparent); border: 1px solid var(--border-alpha); }
+.project-popup-scope .icp-result .score-big { font-family: Chillax,sans-serif; font-size: 2rem; font-weight: 600; color: var(--navy); }
+.project-popup-scope .icp-result .outreach-box { background: rgba(255,255,255,0.7); border: 1px solid var(--border-alpha); border-radius: 0.5rem; padding: 0.75rem 1rem; margin-top: 0.5rem; font-style: italic; color: var(--muted); }
+.project-popup-scope .sim-reset { font-size: 0.8125rem; color: var(--subtle); cursor: pointer; margin-top: 0.75rem; display: inline-block; }
+.project-popup-scope .sim-reset:hover { text-decoration: underline; text-underline-offset: 3px; }
+.project-popup-scope .template-note { display: flex; align-items: flex-start; gap: 0.75rem; padding: 1rem 1.25rem; background: color-mix(in srgb,var(--navy) 5%,transparent); border: 1px solid color-mix(in srgb,var(--navy) 15%,transparent); border-radius: 0.75rem; margin-top: 1.25rem; font-size: 0.8125rem; color: var(--muted); line-height: 1.5; }
+.project-popup-scope .template-note strong { color: var(--navy); }
+
+/* Contact CTA inside project popup */
+.project-cta-banner { display: flex; align-items: center; gap: 1rem; padding: 1.25rem 1.5rem; background: var(--surface); border: 1px solid var(--border-alpha); border-radius: 1.25rem; margin-top: 1.5rem; font-size: 0.9375rem; color: var(--muted); }
+.project-cta-banner strong { color: var(--ink); }
+.project-cta-btn { display: inline-flex; align-items: center; gap: 0.5rem; margin-left: auto; flex-shrink: 0; padding: 0.625rem 1.25rem; border-radius: 9999px; font-family: Satoshi,sans-serif; font-size: 0.85rem; font-weight: 600; color: #fff; background: var(--navy); text-decoration: none; transition: background 0.15s; }
+.project-cta-btn:hover { background: var(--ink); }
+
 @media print {
   @page { size: 1920px 1080px; margin: 0; }
   html, body { width: 1920px !important; height: auto !important; overflow: visible !important; background: #fff !important; }
@@ -326,29 +408,29 @@ h3 { font-family: var(--font-body); font-weight: 600; }
     <p style="font-size:16px;color:#515b6e;font-weight:400">Gebaut mit Stack und Workflow aus Slide 03 — live einsatzfähig</p>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;flex:1;min-height:0">
-    <div style="background:#fff;border:1px solid rgba(26,46,77,0.08);border-radius:24px;padding:20px;box-shadow:0 2px 16px rgba(26,46,77,0.05);display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s;overflow:hidden" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(26,46,77,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+    <div onclick="openProjectPopup('hr-signals.html')" style="background:#fff;border:1px solid rgba(26,46,77,0.08);border-radius:24px;padding:20px;box-shadow:0 2px 16px rgba(26,46,77,0.05);display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s;overflow:hidden;cursor:pointer" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(26,46,77,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
       <svg viewBox="0 0 340 160" style="width:100%;height:140px;border-radius:12px;background:#f8f7f4;display:block;flex-shrink:0"><rect width="340" height="160" fill="#f8f7f4" rx="10"/><rect x="20" y="16" width="180" height="26" rx="8" fill="#fff" stroke="rgba(26,46,77,0.1)"/><text x="30" y="33" font-size="11" fill="#515b6e" font-family="sans-serif">Java</text><circle cx="224" cy="29" r="12" fill="#35d6de"/><text x="224" y="33" text-anchor="middle" font-size="9" font-weight="700" fill="#fff" font-family="sans-serif">GO</text><line x1="20" y1="56" x2="320" y2="56" stroke="rgba(26,46,77,0.05)"/><rect x="20" y="68" width="300" height="6" rx="3" fill="rgba(26,46,77,0.06)"/><rect x="20" y="82" width="240" height="6" rx="3" fill="rgba(26,46,77,0.06)"/><rect x="20" y="96" width="280" height="6" rx="3" fill="rgba(26,46,77,0.06)"/><rect x="20" y="110" width="200" height="6" rx="3" fill="rgba(26,46,77,0.06)"/><rect x="20" y="132" width="80" height="18" rx="6" fill="rgba(53,214,222,0.15)"/><text x="60" y="144" text-anchor="middle" font-size="9" font-weight="600" fill="#1a2e4d" font-family="sans-serif">CSV</text><rect x="110" y="132" width="80" height="18" rx="6" fill="rgba(53,214,222,0.15)"/><text x="150" y="144" text-anchor="middle" font-size="9" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Excel</text></svg>
       <h3 style="font-family:var(--font-display);font-size:19px;font-weight:500;color:#1a2e4d">HR Signals</h3>
       <p style="font-size:14px;color:#515b6e;line-height:1.5">Aus 6 Millionen Job-Anzeigen werden Verkaufssignale. React + FastAPI, BA-API, CSV/Excel-Export.</p>
       <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:10px;border-top:1px solid rgba(26,46,77,0.06)"><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">React</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">FastAPI</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">BA-API</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">SQLite</span></div>
     </div>
-    <div style="background:#fff;border:1px solid rgba(26,46,77,0.08);border-radius:24px;padding:20px;box-shadow:0 2px 16px rgba(26,46,77,0.05);display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s;overflow:hidden" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(26,46,77,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+    <div onclick="openProjectPopup('icp-pipeline.html')" style="background:#fff;border:1px solid rgba(26,46,77,0.08);border-radius:24px;padding:20px;box-shadow:0 2px 16px rgba(26,46,77,0.05);display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s;overflow:hidden;cursor:pointer" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(26,46,77,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
       <svg viewBox="0 0 340 160" style="width:100%;height:140px;border-radius:12px;background:#f8f7f4;display:block;flex-shrink:0"><rect width="340" height="160" fill="#f8f7f4" rx="10"/><text x="170" y="22" text-anchor="middle" font-size="11" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Full-Funnel Pipeline</text><rect x="16" y="36" width="62" height="28" rx="8" fill="#fff" stroke="rgba(26,46,77,0.1)"/><text x="47" y="54" text-anchor="middle" font-size="9" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Input</text><path d="M78 50 L96 50" stroke="#35d6de" stroke-width="2"/><rect x="98" y="36" width="62" height="28" rx="8" fill="#fff" stroke="rgba(26,46,77,0.1)"/><text x="129" y="54" text-anchor="middle" font-size="9" font-weight="600" fill="#1a2e4d" font-family="sans-serif">KI</text><path d="M160 50 L178 50" stroke="#35d6de" stroke-width="2"/><rect x="180" y="36" width="62" height="28" rx="8" fill="#fff" stroke="rgba(26,46,77,0.1)"/><text x="211" y="54" text-anchor="middle" font-size="9" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Score</text><path d="M242 50 L260 50" stroke="#35d6de" stroke-width="2"/><rect x="262" y="36" width="62" height="28" rx="8" fill="#1a2e4d"/><text x="293" y="54" text-anchor="middle" font-size="9" font-weight="600" fill="#fff" font-family="sans-serif">CRM</text><rect x="16" y="80" width="308" height="24" rx="8" fill="rgba(53,214,222,0.1)"/><text x="170" y="96" text-anchor="middle" font-size="9" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Qualifiziert · Branche: Industrie · Budget: Hoch</text><rect x="16" y="118" width="308" height="28" rx="8" fill="#fff" stroke="rgba(26,46,77,0.06)"/><text x="26" y="136" font-size="8" fill="#515b6e" font-family="sans-serif">LinkedIn: "Hi Roland, wir senken Time-to-Hire..."</text></svg>
       <h3 style="font-family:var(--font-display);font-size:19px;font-weight:500;color:#1a2e4d">ICP Full-Funnel</h3>
       <p style="font-size:14px;color:#515b6e;line-height:1.5">Firmenname rein → KI recherchiert → scored → Outreach → HubSpot. Live-Demo + n8n Download.</p>
       <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:10px;border-top:1px solid rgba(26,46,77,0.06)"><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">n8n</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">GPT-4o</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">HubSpot</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">Clay</span></div>
     </div>
-    <div style="background:#fff;border:1px solid rgba(26,46,77,0.08);border-radius:24px;padding:20px;box-shadow:0 2px 16px rgba(26,46,77,0.05);display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s;overflow:hidden" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(26,46,77,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+    <div onclick="openProjectPopup('achilleus.html')" style="background:#fff;border:1px solid rgba(26,46,77,0.08);border-radius:24px;padding:20px;box-shadow:0 2px 16px rgba(26,46,77,0.05);display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s;overflow:hidden;cursor:pointer" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(26,46,77,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
       <svg viewBox="0 0 340 160" style="width:100%;height:140px;border-radius:12px;background:#f8f7f4;display:block;flex-shrink:0"><rect width="340" height="160" fill="#f8f7f4" rx="10"/><text x="170" y="20" text-anchor="middle" font-size="11" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Second Brain Bot</text><rect x="20" y="34" width="300" height="112" rx="10" fill="#fff" stroke="rgba(26,46,77,0.06)"/><rect x="32" y="46" width="100" height="22" rx="8" fill="rgba(53,214,222,0.12)"/><text x="82" y="61" text-anchor="middle" font-size="9" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Telegram</text><path d="M132 57 L152 57" stroke="#35d6de" stroke-width="1.5"/><rect x="156" y="46" width="136" height="22" rx="8" fill="rgba(26,46,77,0.06)"/><text x="224" y="61" text-anchor="middle" font-size="9" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Claude</text><rect x="60" y="80" width="136" height="22" rx="8" fill="rgba(53,214,222,0.1)"/><text x="128" y="95" text-anchor="middle" font-size="9" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Craft MCP → Document</text><rect x="60" y="112" width="136" height="22" rx="8" fill="rgba(26,46,77,0.06)"/><text x="128" y="127" text-anchor="middle" font-size="9" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Sprachnachricht → Task</text></svg>
       <h3 style="font-family:var(--font-display);font-size:19px;font-weight:500;color:#1a2e4d">Achilleus</h3>
       <p style="font-size:14px;color:#515b6e;line-height:1.5">Second Brain: Telegram → Claude denkt → Craft speichert. Voice, Foto, Doc — alles automatisch.</p>
       <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:10px;border-top:1px solid rgba(26,46,77,0.06)"><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">n8n</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">Claude</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">Craft</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">Telegram</span></div>
     </div>
-    <div style="background:#fff;border:1px solid rgba(26,46,77,0.08);border-radius:24px;padding:20px;box-shadow:0 2px 16px rgba(26,46,77,0.05);display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s;overflow:hidden" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(26,46,77,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+    <div onclick="openProjectPopup('ai-workspace.html')" style="background:#fff;border:1px solid rgba(26,46,77,0.08);border-radius:24px;padding:20px;box-shadow:0 2px 16px rgba(26,46,77,0.05);display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s;overflow:hidden;cursor:pointer" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(26,46,77,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
       <svg viewBox="0 0 340 160" style="width:100%;height:140px;border-radius:12px;background:#f8f7f4;display:block;flex-shrink:0"><rect width="340" height="160" fill="#f8f7f4" rx="10"/><text x="170" y="18" text-anchor="middle" font-size="11" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Lokales KI-Workspace</text><circle cx="170" cy="64" r="22" fill="#1a2e4d"/><text x="170" y="60" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" font-family="sans-serif">KI</text><text x="170" y="73" text-anchor="middle" font-size="7" fill="rgba(255,255,255,0.8)" font-family="sans-serif">Hub</text><circle cx="52" cy="34" r="16" fill="#fff" stroke="rgba(26,46,77,0.1)"/><text x="52" y="38" text-anchor="middle" font-size="8" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Chat</text><circle cx="288" cy="34" r="16" fill="#fff" stroke="rgba(26,46,77,0.1)"/><text x="288" y="38" text-anchor="middle" font-size="8" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Docs</text><circle cx="62" cy="116" r="16" fill="#fff" stroke="rgba(26,46,77,0.1)"/><text x="62" y="120" text-anchor="middle" font-size="8" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Research</text><circle cx="278" cy="116" r="16" fill="#fff" stroke="rgba(26,46,77,0.1)"/><text x="278" y="120" text-anchor="middle" font-size="8" font-weight="600" fill="#1a2e4d" font-family="sans-serif">Agents</text><circle cx="170" cy="116" r="16" fill="#fff" stroke="rgba(26,46,77,0.1)"/><text x="170" y="120" text-anchor="middle" font-size="8" font-weight="600" fill="#1a2e4d" font-family="sans-serif">LLMs</text><line x1="68" y1="44" x2="148" y2="56" stroke="rgba(26,46,77,0.08)" stroke-width="1"/><line x1="272" y1="44" x2="192" y2="56" stroke="rgba(26,46,77,0.08)" stroke-width="1"/><line x1="148" y1="76" x2="148" y2="100" stroke="rgba(26,46,77,0.08)" stroke-width="1"/><line x1="192" y1="76" x2="192" y2="100" stroke="rgba(26,46,77,0.08)" stroke-width="1"/><line x1="80" y1="120" x2="154" y2="120" stroke="rgba(26,46,77,0.08)" stroke-width="1"/><line x1="186" y1="120" x2="262" y2="120" stroke="rgba(26,46,77,0.08)" stroke-width="1"/><text x="170" y="148" text-anchor="middle" font-size="8" fill="#515b6e" font-family="sans-serif">Self-Hosted · Odysseus Fork · Kein Datenabfluss</text></svg>
       <h3 style="font-family:var(--font-display);font-size:19px;font-weight:500;color:#1a2e4d">Lokales KI-Workspace</h3>
       <p style="font-size:14px;color:#515b6e;line-height:1.5">Self-hosted LLM-Setup mit eigener Oberfläche — kein Datenabfluss, volle Hoheit für regulierte Umgebungen.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:10px;border-top:1px solid rgba(26,46,77,0.06)"><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">Odysseus Fork</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">Self-Hosted</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">LLM</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">Agents</span></div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:10px;border-top:1px solid rgba(26,46,77,0.06)"><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">Odysseus Fork</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">Self-Hosted</span><span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">LLM</span>        <span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(53,214,222,0.1);color:#1a2e4d">Agents</span></div>
     </div>
   </div>
   <div class="slide-footer">
@@ -421,6 +503,13 @@ h3 { font-family: var(--font-body); font-weight: 600; }
 <div class="img-popup-backdrop" id="imgPopup" onclick="closeImgPopup()">
   <button class="popup-close" onclick="closeImgPopup()" aria-label="Schließen">×</button>
   <div id="imgPopupContent"></div>
+</div>
+
+<div class="project-popup-backdrop" id="projectPopup" onclick="if(event.target===this)closeProjectPopup()">
+  <div class="project-popup-container">
+    <button class="project-popup-close" onclick="closeProjectPopup()" aria-label="Schließen">×</button>
+    <div class="project-popup-scroll" id="projectPopupContent"></div>
+  </div>
 </div>
 
 <script>
@@ -549,6 +638,57 @@ function closeImgPopup() {
   document.body.style.overflow = '';
 }
 document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeImgPopup(); });
+
+function openProjectPopup(url) {
+  var backdrop = document.getElementById('projectPopup');
+  var content = document.getElementById('projectPopupContent');
+  var CTA = '<div class="project-cta-banner">' +
+    '<div style="font-size:1.25rem;flex-shrink:0">&#128075;</div>' +
+    '<div><strong>Interessiert an diesem Projekt?</strong><br>Schreiben Sie mir — ich mache es Ihnen gerne live verf&uuml;gbar zum Testen.</div>' +
+    '<a href="mailto:marco@marcogrotemeyer.de" class="project-cta-btn">&nbsp;&#9993;&nbsp; marco@marcogrotemeyer.de</a>' +
+    '</div>';
+
+  content.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--muted);font-size:1.125rem">Lade Projekt-Details...</div>';
+  backdrop.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  fetch(url)
+    .then(function(r) { if (!r.ok) throw new Error('Fetch failed'); return r.text(); })
+    .then(function(html) {
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(html, 'text/html');
+      var mainEl = doc.querySelector('main');
+      var container = mainEl ? mainEl.querySelector('.container') : doc.querySelector('.container');
+      if (!container) container = mainEl || doc.body;
+
+      var out = '<div class="project-popup-scope">';
+      out += container.innerHTML;
+      out += CTA;
+      out += '</div>';
+      content.innerHTML = out;
+
+      var scripts = doc.querySelectorAll('script');
+      for (var si = 0; si < scripts.length; si++) {
+        var ns = document.createElement('script');
+        ns.textContent = scripts[si].textContent;
+        content.appendChild(ns);
+      }
+    })
+    .catch(function() {
+      content.innerHTML = '<div class="project-popup-scope" style="text-align:center;padding:3rem;color:var(--muted)">' +
+        'Projekt-Details konnten nicht geladen werden. Bitte kontaktieren Sie mich direkt: ' +
+        '<a href="mailto:marco@marcogrotemeyer.de" style="color:var(--navy);font-weight:600">marco@marcogrotemeyer.de</a>' +
+        '</div>';
+    });
+}
+
+function closeProjectPopup() {
+  var el = document.getElementById('projectPopup');
+  el.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeImgPopup(); closeProjectPopup(); } });
 </script>
 </body>
 </html>
