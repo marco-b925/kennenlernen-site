@@ -2,7 +2,7 @@ const https = require('https');
 const http = require('http');
 
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const MODEL = process.env.OPENROUTER_MODEL || 'deepseek/deepseek-chat-v3-0324:free';
+const MODEL = process.env.OPENROUTER_MODEL || 'deepseek/deepseek-chat';
 const MAX_SEARCHES = 10;
 const WINDOW_MS = 60 * 60 * 1000;
 
